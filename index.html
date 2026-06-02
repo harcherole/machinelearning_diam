@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programme Machine Learning — Club D.I.A.M</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        /* ── Header ── */
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        header p  { font-size: 1.2em; opacity: 0.9; }
+
+        /* ── Intro ── */
+        .intro { padding: 30px 40px; background: #f8f9fa; border-left: 5px solid #2a5298; }
+
+        /* ── Nav ── */
+        nav { background: #34495e; padding: 15px 40px; position: sticky; top: 0; z-index: 100; }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+        nav a  { color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; transition: background 0.3s; }
+        nav a:hover { background: #2a5298; }
+
+        /* ── Content ── */
+        .content { padding: 40px; }
+
+        /* ── Week ── */
+        .week { margin-bottom: 50px; border: 2px solid #e0e0e0; border-radius: 10px; overflow: hidden; }
+        .week-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; padding: 20px 30px; font-size: 1.5em; font-weight: bold;
+        }
+        .week-content { padding: 30px; }
+
+        /* ── Section ── */
+        .section { margin-bottom: 40px; }
+
+        h2 { color: #2a5298; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 3px solid #667eea; }
+        h3 { color: #764ba2; margin-top: 25px; margin-bottom: 15px; }
+        h4 { color: #34495e; margin-top: 20px; margin-bottom: 10px; }
+
+        /* ── Notes / Warnings ── */
+        .note    { background: #d4edda; border-left: 5px solid #28a745; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        .warning { background: #f8d7da; border-left: 5px solid #dc3545; padding: 15px; margin: 15px 0; border-radius: 5px; }
+
+        /* ── Project block ── */
+        .project {
+            background: #d1ecf1; border-left: 5px solid #17a2b8;
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+
+        /* ── Projects overview ── */
+        .projects-overview {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px; margin: 30px 0;
+        }
+        .project-card {
+            background: white; border: 2px solid #667eea; border-radius: 10px;
+            padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.3s;
+        }
+        .project-card:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .project-card h3 { color: #2a5298; margin-top: 0; }
+
+        /* ── Tables ── */
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #2a5298; color: white; }
+        tr:nth-child(even) { background: #f8f9fa; }
+
+        ul, ol { margin-left: 30px; margin-top: 10px; margin-bottom: 10px; }
+        li { margin-bottom: 8px; }
+
+        /* ── Badges ── */
+        .badge { display: inline-block; padding: 5px 10px; border-radius: 20px; font-size: 0.85em; font-weight: bold; margin-right: 5px; }
+        .badge-beginner     { background: #28a745; color: white; }
+        .badge-intermediate { background: #ffc107; color: #333; }
+        .badge-advanced     { background: #dc3545; color: white; }
+
+        /* ── Footer ── */
+        footer { background: #34495e; color: white; text-align: center; padding: 20px; margin-top: 50px; }
+
+        @media print { body { background: white; padding: 0; } .container { box-shadow: none; } nav { position: static; } }
+
+        /* ═══════════════════════════════════════════════════════════
+           NOUVEAUX STYLES — blocs code + cours + exercices
+           (identiques au fichier Data Science)
+        ═══════════════════════════════════════════════════════════ */
+
+        /* ── Code block ── */
+        .code-block {
+            background: #050D18;
+            border: 1.5px solid rgba(102, 126, 234, 0.25);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 16px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .code-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 9px 16px;
+            background: #0A1525;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.15);
+        }
+        .code-dots { display: flex; gap: 6px; }
+        .code-dot  { width: 10px; height: 10px; border-radius: 50%; }
+        .code-lang {
+            font-family: 'Courier New', monospace;
+            font-size: 11px; color: #5A7A94; letter-spacing: .06em;
+        }
+        .copy-btn {
+            background: transparent; border: 1px solid #2A4060; color: #5A7A94;
+            padding: 3px 10px; border-radius: 4px; font-size: 11px;
+            font-family: 'Courier New', monospace; cursor: pointer; transition: all .2s;
+        }
+        .copy-btn:hover, .copy-btn.copied { border-color: #667eea; color: #a5b4fc; }
+        .code-block pre {
+            padding: 18px 20px; overflow-x: auto; font-size: 13px;
+            line-height: 1.8; color: #C9D8E8; margin: 0; tab-size: 2;
+        }
+        /* Syntaxe */
+        .code-block .comment  { color: #3D5A70; font-style: italic; }
+        .code-block .keyword  { color: #7DD3FC; }
+        .code-block .string   { color: #FCA5A5; }
+        .code-block .function { color: #86EFAC; }
+        .code-block .number   { color: #FDBA74; }
+
+        /* ── Cours card (accordéon) ── */
+        .cours-card {
+            background: white; border: 1.5px solid #E2E8F0; border-radius: 12px;
+            overflow: hidden; margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: border-color .2s, box-shadow .2s;
+        }
+        .cours-card:hover { border-color: rgba(102,126,234,0.4); box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+        .cours-header {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px 20px; cursor: pointer; user-select: none;
+            border-bottom: 1.5px solid transparent; background: white; transition: background .2s, border-color .2s;
+        }
+        .cours-header:hover { background: #F7F9FC; }
+        .cours-header.open  { background: #F7F9FC; border-color: #E2E8F0; }
+        .cours-icon {
+            width: 34px; height: 34px; border-radius: 8px; background: #EDE9FE;
+            display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+        }
+        .cours-title { font-size: 15px; font-weight: 700; color: #1a1a2e; flex: 1; }
+        .cours-chevron { color: #CBD5E1; font-size: 20px; font-weight: 700; line-height: 1; transition: transform .25s; }
+        .cours-chevron.open { transform: rotate(90deg); }
+        .cours-body { display: none; padding: 20px 22px; }
+        .cours-body.open { display: block; }
+
+        /* ── Exercice card (accordéon) ── */
+        .exercise {
+            background: #FFFBEB; border: 1.5px solid #FDE68A;
+            border-radius: 12px; overflow: hidden; margin: 14px 0;
+        }
+        .exo-header {
+            display: flex; align-items: center; gap: 12px;
+            padding: 13px 18px; cursor: pointer; user-select: none; transition: filter .2s;
+        }
+        .exo-header:hover { filter: brightness(0.97); }
+        .exo-num {
+            font-family: 'Courier New', monospace; font-size: 11.5px; font-weight: 700;
+            padding: 3px 10px; border-radius: 50px; background: #FEF3C7; color: #D97706; flex-shrink: 0;
+        }
+        .exo-title { font-weight: 700; font-size: 14px; color: #1a1a2e; flex: 1; }
+        .exo-body { display: none; padding: 0 18px 18px; }
+        .exo-body.open { display: block; }
+        .exo-body p, .exo-body li { font-size: 14px; color: #374151; }
+        .exo-body ol { margin: 10px 0 10px 20px; }
+        .exo-body ol li { margin: 8px 0; }
+        .exo-body .note { margin-top: 12px; font-size: 13px; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <h1>🎓 Club D.I.A.M</h1>
+        <p>Programme Machine Learning — 4 Semaines</p>
+        <p>Formation Intensive | Focus Afrique 🌍</p>
+    </header>
+
+    <div class="intro">
+        <h2>📚 À propos du programme</h2>
+        <p>Bienvenue dans ce programme intensif de Machine Learning spécialement conçu pour traiter des problématiques africaines avec des données réelles du continent. En 4 semaines, vous maîtriserez les techniques essentielles du ML à travers des projets concrets.</p>
+        <p style="margin-top:10px"><strong>🎯 Objectifs :</strong> Maîtriser la régression, la classification, l'optimisation de modèles et déployer des solutions ML applicables aux défis africains.</p>
+    </div>
+
+    <nav>
+        <ul>
+            <li><a href="#projets">🚀 Projets</a></li>
+            <li><a href="#semaine1">📅 Semaine 1</a></li>
+            <li><a href="#semaine2">📅 Semaine 2</a></li>
+            <li><a href="#semaine3">📅 Semaine 3</a></li>
+            <li><a href="#semaine4">📅 Semaine 4</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+
+        <!-- ═══════════════════════════════════ PROJETS OVERVIEW ═══ -->
+        <section id="projets" class="section">
+            <h2>🚀 Projets Africains du Programme</h2>
+            <div class="projects-overview">
+                <div class="project-card">
+                    <h3>🌾 Projet 1 : Agriculture Intelligente</h3>
+                    <p><strong>Prédiction des Rendements Agricoles au Sahel</strong></p>
+                    <p>Utilisation de données météorologiques, de sol et agricoles pour prédire les rendements de mil et sorgho.</p>
+                    <p><span class="badge badge-beginner">Régression</span></p>
+                    <p><em>Données : Mali, Burkina Faso, Niger</em></p>
+                </div>
+                <div class="project-card">
+                    <h3>💳 Projet 2 : Inclusion Financière</h3>
+                    <p><strong>Prédiction de Risque Crédit Mobile Money</strong></p>
+                    <p>Modèle ML pour prédire le défaut de paiement des prêts mobile money (M-Pesa, Orange Money).</p>
+                    <p><span class="badge badge-intermediate">Classification</span></p>
+                    <p><em>Données : Kenya, Côte d'Ivoire, Sénégal</em></p>
+                </div>
+                <div class="project-card">
+                    <h3>🏥 Projet 3 : Santé Publique</h3>
+                    <p><strong>Détection Précoce du Paludisme</strong></p>
+                    <p>Classification des zones à risque de paludisme basée sur des facteurs environnementaux et démographiques.</p>
+                    <p><span class="badge badge-advanced">Classification + SHAP</span></p>
+                    <p><em>Données : RDC, Nigeria, Tanzanie</em></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════ SEMAINE 1 ═══ -->
+        <div id="semaine1" class="week">
+            <div class="week-header">📅 Semaine 1 — Fondamentaux de la Régression</div>
+            <div class="week-content">
+
+                <div class="section">
+                    <h2>🎯 Objectifs de la semaine</h2>
+                    <ul>
+                        <li>Comprendre la régression linéaire et logistique</li>
+                        <li>Implémenter des modèles de prédiction</li>
+                        <li>Évaluer les performances avec des métriques appropriées</li>
+                        <li>Appliquer à un cas réel africain</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>📖 Cours — Régression Linéaire</h2>
+
+                    <div class="note">
+                        <strong>📝 Équation :</strong> y = β₀ + β₁x₁ + β₂x₂ + ... + βₙxₙ + ε
+                        <br>Où β sont les coefficients et ε l'erreur résiduelle.
+                    </div>
+
+                    <!-- COURS 1 -->
+                    <div class="cours-card">
+                        <div class="cours-header" onclick="toggleCours(this)">
+                            <div class="cours-icon">📖</div>
+                            <span class="cours-title">Cours — Régression Linéaire : prédiction du prix du cacao (Afrique)</span>
+                            <span class="cours-chevron">›</span>
+                        </div>
+                        <div class="cours-body">
+                            <div class="code-block">
+                                <div class="code-bar">
+                                    <div class="code-dots">
+                                        <div class="code-dot" style="background:#FF5F57"></div>
+                                        <div class="code-dot" style="background:#FEBC2E"></div>
+                                        <div class="code-dot" style="background:#28C840"></div>
+                                    </div>
+                                    <span class="code-lang">regression_lineaire.py</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+                                </div>
+<pre><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error, r2_score, mean_absolute_error
+
+<span class="comment"># Dataset simulé — Prix du Cacao (Côte d'Ivoire)</span>
+np.random.seed(<span class="number">42</span>)
+data = {
+    <span class="string">'annee'</span>             : <span class="function">range</span>(<span class="number">2010</span>, <span class="number">2024</span>),
+    <span class="string">'production_tonnes'</span> : [<span class="number">1200000</span> + i*<span class="number">50000</span> + np.random.<span class="function">randint</span>(-<span class="number">100000</span>, <span class="number">100000</span>) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">14</span>)],
+    <span class="string">'pluviometrie_mm'</span>   : [<span class="number">1200</span> + np.random.<span class="function">randint</span>(-<span class="number">200</span>, <span class="number">300</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="function">range</span>(<span class="number">14</span>)],
+    <span class="string">'temperature'</span>       : [<span class="number">26</span> + np.random.<span class="function">uniform</span>(-<span class="number">1</span>, <span class="number">2</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="function">range</span>(<span class="number">14</span>)],
+    <span class="string">'superficie_ha'</span>     : [<span class="number">3000000</span> + i*<span class="number">100000</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">14</span>)],
+    <span class="string">'prix_fcfa_kg'</span>      : [<span class="number">1200</span> + i*<span class="number">80</span> + np.random.<span class="function">randint</span>(-<span class="number">100</span>, <span class="number">150</span>) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">14</span>)]
+}
+df = pd.<span class="function">DataFrame</span>(data)
+
+<span class="comment"># Heatmap des corrélations</span>
+plt.<span class="function">figure</span>(figsize=(<span class="number">10</span>, <span class="number">8</span>))
+sns.<span class="function">heatmap</span>(df.<span class="function">corr</span>(), annot=<span class="keyword">True</span>, cmap=<span class="string">'coolwarm'</span>, center=<span class="number">0</span>)
+plt.<span class="function">title</span>(<span class="string">'Corrélations — Prix du Cacao'</span>); plt.<span class="function">tight_layout</span>(); plt.<span class="function">show</span>()
+
+<span class="comment"># Train / Test split</span>
+X = df[[<span class="string">'production_tonnes'</span>, <span class="string">'pluviometrie_mm'</span>, <span class="string">'temperature'</span>, <span class="string">'superficie_ha'</span>]]
+y = df[<span class="string">'prix_fcfa_kg'</span>]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)
+
+<span class="comment"># Entraînement</span>
+model = <span class="function">LinearRegression</span>()
+model.<span class="function">fit</span>(X_train, y_train)
+y_pred = model.<span class="function">predict</span>(X_test)
+
+<span class="comment"># Évaluation</span>
+<span class="function">print</span>(<span class="string">f"RMSE : {np.sqrt(mean_squared_error(y_test, y_pred)):.2f} FCFA/kg"</span>)
+<span class="function">print</span>(<span class="string">f"MAE  : {mean_absolute_error(y_test, y_pred):.2f} FCFA/kg"</span>)
+<span class="function">print</span>(<span class="string">f"R²   : {r2_score(y_test, y_pred):.4f}"</span>)</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COURS 2 -->
+                    <div class="cours-card">
+                        <div class="cours-header" onclick="toggleCours(this)">
+                            <div class="cours-icon">📖</div>
+                            <span class="cours-title">Cours — Régression Logistique : prédiction d'accès à l'électricité</span>
+                            <span class="cours-chevron">›</span>
+                        </div>
+                        <div class="cours-body">
+                            <div class="code-block">
+                                <div class="code-bar">
+                                    <div class="code-dots">
+                                        <div class="code-dot" style="background:#FF5F57"></div>
+                                        <div class="code-dot" style="background:#FEBC2E"></div>
+                                        <div class="code-dot" style="background:#28C840"></div>
+                                    </div>
+                                    <span class="code-lang">regression_logistique.py</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+                                </div>
+<pre><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> classification_report, confusion_matrix, roc_auc_score
+
+<span class="comment"># Dataset accès à l'électricité — Afrique subsaharienne</span>
+np.random.seed(<span class="number">42</span>)
+n = <span class="number">1000</span>
+data_elec = {
+    <span class="string">'zone_urbaine'</span>        : np.random.<span class="function">choice</span>([<span class="number">0</span>, <span class="number">1</span>], n, p=[<span class="number">0.6</span>, <span class="number">0.4</span>]),
+    <span class="string">'revenu_mensuel'</span>      : np.random.<span class="function">randint</span>(<span class="number">20000</span>, <span class="number">500000</span>, n),
+    <span class="string">'distance_reseau_km'</span>  : np.random.<span class="function">uniform</span>(<span class="number">0</span>, <span class="number">50</span>, n),
+    <span class="string">'taille_menage'</span>       : np.random.<span class="function">randint</span>(<span class="number">1</span>, <span class="number">12</span>, n),
+    <span class="string">'niveau_education'</span>    : np.random.<span class="function">randint</span>(<span class="number">0</span>, <span class="number">5</span>, n),
+}
+df_elec = pd.<span class="function">DataFrame</span>(data_elec)
+
+<span class="comment"># Variable cible : accès à l'électricité</span>
+df_elec[<span class="string">'acces'</span>] = (
+    (df_elec[<span class="string">'zone_urbaine'</span>] * <span class="number">0.4</span>) +
+    (df_elec[<span class="string">'revenu_mensuel'</span>] / <span class="number">1000000</span>) +
+    ((<span class="number">50</span> - df_elec[<span class="string">'distance_reseau_km'</span>]) / <span class="number">50</span> * <span class="number">0.3</span>) +
+    (df_elec[<span class="string">'niveau_education'</span>] / <span class="number">20</span>) +
+    np.random.<span class="function">uniform</span>(-<span class="number">0.2</span>, <span class="number">0.2</span>, n)
+) > <span class="number">0.6</span>
+df_elec[<span class="string">'acces'</span>] = df_elec[<span class="string">'acces'</span>].astype(<span class="function">int</span>)
+
+X = df_elec.drop(<span class="string">'acces'</span>, axis=<span class="number">1</span>); y = df_elec[<span class="string">'acces'</span>]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.2</span>, stratify=y, random_state=<span class="number">42</span>)
+
+log_model = <span class="function">LogisticRegression</span>(max_iter=<span class="number">1000</span>, random_state=<span class="number">42</span>)
+log_model.<span class="function">fit</span>(X_train, y_train)
+
+y_pred       = log_model.<span class="function">predict</span>(X_test)
+y_pred_proba = log_model.<span class="function">predict_proba</span>(X_test)[:, <span class="number">1</span>]
+
+<span class="function">print</span>(<span class="function">classification_report</span>(y_test, y_pred, target_names=[<span class="string">"Pas d'accès"</span>, <span class="string">'Accès'</span>]))
+<span class="function">print</span>(<span class="string">f"ROC-AUC : {roc_auc_score(y_test, y_pred_proba):.4f}"</span>)</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EXERCICES -->
+                    <div class="exercise">
+                        <div class="exo-header" onclick="toggleExo(this)">
+                            <span class="exo-num">Exercice 1.1</span>
+                            <span class="exo-title">✏️ Régression Linéaire — Prix du Maïs au Kenya 🌽</span>
+                            <span class="cours-chevron">›</span>
+                        </div>
+                        <div class="exo-body">
+                            <p><strong>Contexte :</strong> Vous travaillez pour une coopérative agricole au Kenya. Prédisez le prix du maïs en fonction de différents facteurs.</p>
+                            <ol>
+                                <li>Créer un dataset de 200 observations : production (tonnes), pluviométrie (mm), prix carburant (KSh), demande export (tonnes), <strong>prix maïs (KSh/kg)</strong> — cible</li>
+                                <li>Effectuer une EDA complète</li>
+                                <li>Entraîner un modèle de régression linéaire</li>
+                                <li>Évaluer avec MSE, RMSE, MAE et R²</li>
+                                <li>Visualiser prédictions vs réalité + analyse des résidus</li>
+                            </ol>
+                            <div class="code-block" style="margin-top:14px">
+                                <div class="code-bar">
+                                    <div class="code-dots">
+                                        <div class="code-dot" style="background:#FF5F57"></div>
+                                        <div class="code-dot" style="background:#FEBC2E"></div>
+                                        <div class="code-dot" style="background:#28C840"></div>
+                                    </div>
+                                    <span class="code-lang">solution_ex1_1.py</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+                                </div>
+<pre><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error, r2_score, mean_absolute_error
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+np.random.seed(<span class="number">123</span>); n = <span class="number">200</span>
+data_mais = {
+    <span class="string">'production_tonnes'</span>    : np.random.<span class="function">randint</span>(<span class="number">80000</span>, <span class="number">150000</span>, n),
+    <span class="string">'pluviometrie_mm'</span>      : np.random.<span class="function">randint</span>(<span class="number">400</span>, <span class="number">1200</span>, n),
+    <span class="string">'prix_carburant_ksh'</span>   : np.random.<span class="function">uniform</span>(<span class="number">100</span>, <span class="number">150</span>, n),
+    <span class="string">'demande_export_tonnes'</span>: np.random.<span class="function">randint</span>(<span class="number">10000</span>, <span class="number">50000</span>, n),
+}
+df_mais = pd.<span class="function">DataFrame</span>(data_mais)
+df_mais[<span class="string">'prix_mais_ksh_kg'</span>] = (
+    <span class="number">30</span> - <span class="number">0.0001</span> * df_mais[<span class="string">'production_tonnes'</span>]
+       + <span class="number">0.01</span>   * df_mais[<span class="string">'pluviometrie_mm'</span>]
+       + <span class="number">0.2</span>    * df_mais[<span class="string">'prix_carburant_ksh'</span>]
+       + <span class="number">0.0003</span> * df_mais[<span class="string">'demande_export_tonnes'</span>]
+       + np.random.<span class="function">normal</span>(<span class="number">0</span>, <span class="number">3</span>, n)
+)
+
+X = df_mais.drop(<span class="string">'prix_mais_ksh_kg'</span>, axis=<span class="number">1</span>); y = df_mais[<span class="string">'prix_mais_ksh_kg'</span>]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)
+
+model = <span class="function">LinearRegression</span>()
+model.<span class="function">fit</span>(X_train, y_train)
+y_pred = model.<span class="function">predict</span>(X_test)
+
+<span class="function">print</span>(<span class="string">f"RMSE : {np.sqrt(mean_squared_error(y_test, y_pred)):.2f}"</span>)
+<span class="function">print</span>(<span class="string">f"MAE  : {mean_absolute_error(y_test, y_pred):.2f}"</span>)
+<span class="function">print</span>(<span class="string">f"R²   : {r2_score(y_test, y_pred):.4f}"</span>)</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exercise">
+                        <div class="exo-header" onclick="toggleExo(this)">
+                            <span class="exo-num">Exercice 1.2</span>
+                            <span class="exo-title">✏️ Régression Logistique — Abandon Scolaire au Nigeria 🎓</span>
+                            <span class="cours-chevron">›</span>
+                        </div>
+                        <div class="exo-body">
+                            <p><strong>Contexte :</strong> Prédire le risque d'abandon scolaire dans les écoles secondaires au Nigeria.</p>
+                            <ol>
+                                <li>Créer un dataset de 500 élèves : distance école (km), revenu familial (Naira), nb absences, note moyenne, genre, <strong>abandon (0/1)</strong> — cible</li>
+                                <li>Entraîner une régression logistique</li>
+                                <li>Calculer accuracy, precision, recall, F1-score</li>
+                                <li>Afficher la matrice de confusion</li>
+                                <li>Tracer la courbe ROC et calculer le ROC-AUC</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MINI-PROJET -->
+                <div class="section">
+                    <h2>🎨 Mini-Projet — Prédiction Rendement Agricole (Mali)</h2>
+                    <div class="project">
+                        <h4>📋 Contexte</h4>
+                        <p>Vous travaillez pour le Ministère de l'Agriculture du Mali. Mission : estimer les rendements de mil dans différentes régions.</p>
+                        <h4>📊 Variables</h4>
+                        <ul>
+                            <li><strong>region</strong> : Kayes, Koulikoro, Sikasso, Ségou, Mopti…</li>
+                            <li><strong>pluviometrie_mm</strong>, <strong>temperature_moy</strong>, <strong>superficie_ha</strong>, <strong>engrais_kg_ha</strong></li>
+                            <li><strong>semences_ameliorees</strong> (0/1), <strong>irrigation</strong> (0/1)</li>
+                            <li><strong>rendement_kg_ha</strong> ← CIBLE</li>
+                        </ul>
+                        <h4>💻 Code Complet</h4>
+                        <div class="cours-card" style="margin-top:12px">
+                            <div class="cours-header" onclick="toggleCours(this)">
+                                <div class="cours-icon">📖</div>
+                                <span class="cours-title">Code Complet — Mini-Projet Rendement Agricole Mali</span>
+                                <span class="cours-chevron">›</span>
+                            </div>
+                            <div class="cours-body">
+                                <div class="code-block">
+                                    <div class="code-bar">
+                                        <div class="code-dots">
+                                            <div class="code-dot" style="background:#FF5F57"></div>
+                                            <div class="code-dot" style="background:#FEBC2E"></div>
+                                            <div class="code-dot" style="background:#28C840"></div>
+                                        </div>
+                                        <span class="code-lang">projet_rendement_mali.py</span>
+                                        <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+                                    </div>
+<pre><span class="keyword">import</span> pandas <span class="keyword">as</span> pd, numpy <span class="keyword">as</span> np, matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split, cross_val_score
+<span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression, Ridge, Lasso
+<span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler, LabelEncoder
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error, r2_score
+
+np.random.seed(<span class="number">42</span>)
+regions   = [<span class="string">'Kayes'</span>, <span class="string">'Koulikoro'</span>, <span class="string">'Sikasso'</span>, <span class="string">'Ségou'</span>, <span class="string">'Mopti'</span>, <span class="string">'Tombouctou'</span>]
+n         = <span class="number">300</span>
+
+df = pd.<span class="function">DataFrame</span>({
+    <span class="string">'region'</span>              : np.random.<span class="function">choice</span>(regions, n),
+    <span class="string">'pluviometrie_mm'</span>     : np.random.<span class="function">randint</span>(<span class="number">300</span>, <span class="number">1200</span>, n),
+    <span class="string">'temperature'</span>         : np.random.<span class="function">uniform</span>(<span class="number">26</span>, <span class="number">35</span>, n),
+    <span class="string">'superficie_ha'</span>       : np.random.<span class="function">randint</span>(<span class="number">1</span>, <span class="number">100</span>, n),
+    <span class="string">'engrais_kg_ha'</span>       : np.random.<span class="function">randint</span>(<span class="number">0</span>, <span class="number">200</span>, n),
+    <span class="string">'semences_ameliorees'</span> : np.random.<span class="function">choice</span>([<span class="number">0</span>, <span class="number">1</span>], n, p=[<span class="number">0.4</span>, <span class="number">0.6</span>]),
+    <span class="string">'irrigation'</span>          : np.random.<span class="function">choice</span>([<span class="number">0</span>, <span class="number">1</span>], n, p=[<span class="number">0.7</span>, <span class="number">0.3</span>]),
+})
+df[<span class="string">'rendement_kg_ha'</span>] = (
+    <span class="number">500</span>
+    + df[<span class="string">'pluviometrie_mm'</span>] * <span class="number">0.8</span>
+    - <span class="number">30</span> * (df[<span class="string">'temperature'</span>] - <span class="number">28</span>)
+    + df[<span class="string">'engrais_kg_ha'</span>] * <span class="number">3</span>
+    + df[<span class="string">'semences_ameliorees'</span>] * <span class="number">200</span>
+    + df[<span class="string">'irrigation'</span>] * <span class="number">300</span>
+    + np.random.<span class="function">normal</span>(<span class="number">0</span>, <span class="number">100</span>, n)
+).<span class="function">clip</span>(lower=<span class="number">200</span>)
+
+<span class="comment"># Encoding + split</span>
+df[<span class="string">'region_enc'</span>] = <span class="function">LabelEncoder</span>().<span class="function">fit_transform</span>(df[<span class="string">'region'</span>])
+X = df.drop([<span class="string">'region'</span>, <span class="string">'rendement_kg_ha'</span>], axis=<span class="number">1</span>)
+y = df[<span class="string">'rendement_kg_ha'</span>]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)
+
+scaler         = <span class="function">StandardScaler</span>()
+X_train_scaled = scaler.<span class="function">fit_transform</span>(X_train)
+X_test_scaled  = scaler.<span class="function">transform</span>(X_test)
+
+<span class="comment"># Comparer 3 modèles</span>
+<span class="keyword">for</span> name, model <span class="keyword">in</span> {<span class="string">'Linéaire'</span>: <span class="function">LinearRegression</span>(), <span class="string">'Ridge'</span>: <span class="function">Ridge</span>(), <span class="string">'Lasso'</span>: <span class="function">Lasso</span>()}.items():
+    model.<span class="function">fit</span>(X_train_scaled, y_train)
+    y_pred = model.<span class="function">predict</span>(X_test_scaled)
+    cv     = cross_val_score(model, X_train_scaled, y_train, cv=<span class="number">5</span>, scoring=<span class="string">'r2'</span>)
+    <span class="function">print</span>(<span class="string">f"{name} → R²={r2_score(y_test, y_pred):.4f} | CV={cv.mean():.4f}±{cv.std():.4f}"</span>)</pre>
+                                </div>
+                            </div>
+                        </div>
+                        <h4 style="margin-top:16px">📝 Livrables</h4>
+                        <ol><li>Rapport d'analyse exploratoire</li><li>Modèle entraîné et sauvegardé</li><li>Visualisations des résultats</li><li>Recommandations pour améliorer les rendements</li></ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════ SEMAINE 2 ═══ -->
+        <div id="semaine2" class="week">
+            <div class="week-header">📅 Semaine 2 — Classification Supervisée &amp; Arbres</div>
+            <div class="week-content">
+
+                <div class="section">
+                    <h2>🎯 Objectifs de la semaine</h2>
+                    <ul>
+                        <li>Maîtriser les algorithmes de classification</li>
+                        <li>Comprendre et utiliser Random Forest</li>
+                        <li>Gérer les déséquilibres de classes avec SMOTE</li>
+                        <li>Optimiser les hyperparamètres</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>📖 Cours — Random Forest</h2>
+
+                    <div class="note">
+                        <strong>🌳 Avantages du Random Forest :</strong>
+                        <ul style="margin-top:6px">
+                            <li>Facile à interpréter, capture les non-linéarités</li>
+                            <li>Gère données numériques et catégorielles</li>
+                            <li>Pas besoin de normalisation</li>
+                        </ul>
+                    </div>
+
+                    <div class="cours-card">
+                        <div class="cours-header" onclick="toggleCours(this)">
+                            <div class="cours-icon">📖</div>
+                            <span class="cours-title">Cours — Random Forest : détection de fraude M-Pesa (Kenya)</span>
+                            <span class="cours-chevron">›</span>
+                        </div>
+                        <div class="cours-body">
+                            <div class="code-block">
+                                <div class="code-bar">
+                                    <div class="code-dots">
+                                        <div class="code-dot" style="background:#FF5F57"></div>
+                                        <div class="code-dot" style="background:#FEBC2E"></div>
+                                        <div class="code-dot" style="background:#28C840"></div>
+                                    </div>
+                                    <span class="code-lang">random_forest.py</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+                                </div>
+<pre><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> classification_report, roc_auc_score
+
+np.random.seed(<span class="number">42</span>); n_fraud = <span class="number">250</span>; n_normal = <span class="number">4750</span>
+
+normal = pd.<span class="function">DataFrame</span>({
+    <span class="string">'montant_ksh'</span>          : np.random.<span class="function">lognormal</span>(<span class="number">7</span>, <span class="number">1.5</span>, n_normal),
+    <span class="string">'heure'</span>                : np.random.<span class="function">randint</span>(<span class="number">6</span>, <span class="number">22</span>, n_normal),
+    <span class="string">'nb_transactions_jour'</span> : np.random.<span class="function">randint</span>(<span class="number">1</span>, <span class="number">5</span>, n_normal),
+    <span class="string">'anciennete_jours'</span>     : np.random.<span class="function">randint</span>(<span class="number">30</span>, <span class="number">1000</span>, n_normal),
+    <span class="string">'localisation_change'</span>  : np.random.<span class="function">choice</span>([<span class="number">0</span>,<span class="number">1</span>], n_normal, p=[<span class="number">0.9</span>,<span class="number">0.1</span>]),
+    <span class="string">'fraude'</span>: np.<span class="function">zeros</span>(n_normal, dtype=<span class="function">int</span>)
+})
+fraud = pd.<span class="function">DataFrame</span>({
+    <span class="string">'montant_ksh'</span>          : np.random.<span class="function">lognormal</span>(<span class="number">9</span>, <span class="number">1</span>, n_fraud),
+    <span class="string">'heure'</span>                : np.random.<span class="function">choice</span>(<span class="function">list</span>(<span class="function">range</span>(<span class="number">0</span>,<span class="number">6</span>))+<span class="function">list</span>(<span class="function">range</span>(<span class="number">22</span>,<span class="number">24</span>)), n_fraud),
+    <span class="string">'nb_transactions_jour'</span> : np.random.<span class="function">randint</span>(<span class="number">5</span>, <span class="number">20</span>, n_fraud),
+    <span class="string">'anciennete_jours'</span>     : np.random.<span class="function">randint</span>(<span class="number">1</span>, <span class="number">30</span>, n_fraud),
+    <span class="string">'localisation_change'</span>  : np.random.<span class="function">choice</span>([<span class="number">0</span>,<span class="number">1</span>], n_fraud, p=[<span class="number">0.3</span>,<span class="number">0.7</span>]),
+    <span class="string">'fraude'</span>: np.<span class="function">ones</span>(n_fraud, dtype=<span class="function">int</span>)
+})
+
+df = pd.<span class="function">concat</span>([normal, fraud]).<span class="function">sample</span>(frac=<span class="number">1</span>, random_state=<span class="number">42</span>).<span class="function">reset_index</span>(drop=<span class="keyword">True</span>)
+X = df.drop(<span class="string">'fraude'</span>, axis=<span class="number">1</span>); y = df[<span class="string">'fraude'</span>]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.2</span>, stratify=y, random_state=<span class="number">42</span>)
+
+rf = <span class="function">RandomForestClassifier</span>(n_estimators=<span class="number">100</span>, max_depth=<span class="number">10</span>, class_weight=<span class="string">'balanced'</span>, random_state=<span class="number">42</span>, n_jobs=-<span class="number">1</span>)
+rf.<span class="function">fit</span>(X_train, y_train)
+y_pred = rf.<span class="function">predict</span>(X_test)
+
+<span class="function">print</span>(<span class="function">classification_report</span>(y_test, y_pred, target_names=[<span class="string">'Normal'</span>, <span class="string">'Fraude'</span>]))
+<span class="function">print</span>(<span class="string">f"ROC-AUC : {roc_auc_score(y_test, rf.predict_proba(X_test)[:,1]):.4f}"</span>)</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cours-card">
+                        <div class="cours-header" onclick="toggleCours(this)">
+                            <div class="cours-icon">📖</div>
+                            <span class="cours-title">Cours — SMOTE &amp; Hyperparameter Tuning (Grid Search / Random Search)</span>
+                            <span class="cours-chevron">›</span>
+                        </div>
+                        <div class="cours-body">
+                            <div class="code-block">
+                                <div class="code-bar">
+                                    <div class="code-dots">
+                                        <div class="code-dot" style="background:#FF5F57"></div>
+                                        <div class="code-dot" style="background:#FEBC2E"></div>
+                                        <div class="code-dot" style="background:#28C840"></div>
+                                    </div>
+                                    <span class="code-lang">smote_gridsearch.py</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+                                </div>
+<pre><span class="keyword">from</span> imblearn.over_sampling <span class="keyword">import</span> SMOTE
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV, RandomizedSearchCV
+<span class="keyword">from</span> scipy.stats <span class="keyword">import</span> randint
+
+<span class="comment"># ── SMOTE ─────────────────────────────────────────────</span>
+smote = <span class="function">SMOTE</span>(random_state=<span class="number">42</span>, k_neighbors=<span class="number">5</span>)
+X_train_sm, y_train_sm = smote.<span class="function">fit_resample</span>(X_train, y_train)
+<span class="function">print</span>(<span class="string">f"Avant SMOTE : {np.bincount(y_train)}"</span>)
+<span class="function">print</span>(<span class="string">f"Après SMOTE : {np.bincount(y_train_sm)}"</span>)
+
+<span class="comment"># ── Grid Search ───────────────────────────────────────</span>
+param_grid = {
+    <span class="string">'n_estimators'</span>    : [<span class="number">50</span>, <span class="number">100</span>, <span class="number">200</span>],
+    <span class="string">'max_depth'</span>       : [<span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>, <span class="keyword">None</span>],
+    <span class="string">'min_samples_split'</span>: [<span class="number">2</span>, <span class="number">5</span>, <span class="number">10</span>],
+}
+grid_search = <span class="function">GridSearchCV</span>(
+    <span class="function">RandomForestClassifier</span>(random_state=<span class="number">42</span>, n_jobs=-<span class="number">1</span>),
+    param_grid, cv=<span class="number">5</span>, scoring=<span class="string">'roc_auc'</span>, n_jobs=-<span class="number">1</span>
+)
+grid_search.<span class="function">fit</span>(X_train_sm, y_train_sm)
+<span class="function">print</span>(<span class="string">f"Meilleurs params : {grid_search.best_params_}"</span>)
+<span class="function">print</span>(<span class="string">f"Meilleur ROC-AUC  : {grid_search.best_score_:.4f}"</span>)
+
+<span class="comment"># ── Random Search (plus rapide) ───────────────────────</span>
+random_search = <span class="function">RandomizedSearchCV</span>(
+    <span class="function">RandomForestClassifier</span>(random_state=<span class="number">42</span>, n_jobs=-<span class="number">1</span>),
+    param_distributions={<span class="string">'n_estimators'</span>: <span class="function">randint</span>(<span class="number">50</span>, <span class="number">300</span>), <span class="string">'max_depth'</span>: [<span class="number">5</span>,<span class="number">10</span>,<span class="number">15</span>,<span class="number">20</span>,<span class="keyword">None</span>]},
+    n_iter=<span class="number">30</span>, cv=<span class="number">5</span>, scoring=<span class="string">'roc_auc'</span>, random_state=<span class="number">42</span>, n_jobs=-<span class="number">1</span>
+)
+random_search.<span class="function">fit</span>(X_train_sm, y_train_sm)
+<span class="function">print</span>(<span class="string">f"Random Search meilleur score : {random_search.best_score_:.4f}"</span>)</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exercise">
+                        <div class="exo-header" onclick="toggleExo(this)">
+                            <span class="exo-num">Exercice 2.1</span>
+                            <span class="exo-title">✏️ Classification Qualité d'Eau au Rwanda 💧</span>
+                            <span class="cours-chevron">›</span>
+                        </div>
+                        <div class="exo-body">
+                            <p><strong>Contexte :</strong> Classifier la potabilité de l'eau dans différentes sources au Rwanda.</p>
+                            <ol>
+                                <li>Créer un dataset avec pH, turbidité, chlore, coliformes, conductivité, température, source</li>
+                                <li>Entraîner un Random Forest</li>
+                                <li>Appliquer SMOTE si la classe est déséquilibrée</li>
+                                <li>Optimiser avec Grid Search</li>
+                                <li>Afficher l'importance des features</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>🎨 Mini-Projet — Churn Télécom au Ghana</h2>
+                    <div class="project">
+                        <h4>📋 Description</h4>
+                        <p>Prédire le risque de désabonnement (churn) des clients d'un opérateur télécom au Ghana.</p>
+                        <h4>📊 Variables</h4>
+                        <ul>
+                            <li>Durée d'abonnement (mois), Consommation data (GB), Montant facture (GHS)</li>
+                            <li>Appels au service client, Type de forfait, Région, <strong>Churn (0/1)</strong></li>
+                        </ul>
+                        <p style="margin-top:10px"><strong>Code complet disponible dans les ressources du cours.</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════ SEMAINE 3 ═══ -->
+        <div id="semaine3" class="week">
+            <div class="week-header">📅 Semaine 3 — Boosting &amp; Interprétabilité</div>
+            <div class="week-content">
+
+                <div class="section">
+                    <h2>🎯 Objectifs de la semaine</h2>
+                    <ul>
+                        <li>Maîtriser XGBoost et LightGBM</li>
+                        <li>Comprendre les métriques avancées (ROC-AUC, F1)</li>
+                        <li>Implémenter la validation croisée</li>
+                        <li>Interpréter les modèles avec SHAP</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>📖 Cours — XGBoost &amp; LightGBM</h2>
+
+                    <div class="note">
+                        <strong>🚀 Avantages du Boosting :</strong> performance supérieure, résistance au surapprentissage, gestion des valeurs manquantes, données déséquilibrées.
+                    </div>
+
+                    <div class="cours-card">
+                        <div class="cours-header" onclick="toggleCours(this)">
+                            <div class="cours-icon">📖</div>
+                            <span class="cours-title">Cours — XGBoost : prédiction de défaut crédit microfinance (Sénégal)</span>
+                            <span class="cours-chevron">›</span>
+                        </div>
+                        <div class="cours-body">
+                            <div class="code-block">
+                                <div class="code-bar">
+                                    <div class="code-dots">
+                                        <div class="code-dot" style="background:#FF5F57"></div>
+                                        <div class="code-dot" style="background:#FEBC2E"></div>
+                                        <div class="code-dot" style="background:#28C840"></div>
+                                    </div>
+                                    <span class="code-lang">xgboost_credit.py</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+                                </div>
+<pre><span class="keyword">import</span> xgboost <span class="keyword">as</span> xgb
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> classification_report, roc_auc_score, f1_score
+
+<span class="comment"># Dataset crédit microfinance — Sénégal</span>
+np.random.seed(<span class="number">42</span>); n = <span class="number">3000</span>
+df_credit = pd.<span class="function">DataFrame</span>({
+    <span class="string">'age'</span>                 : np.random.<span class="function">randint</span>(<span class="number">18</span>, <span class="number">70</span>, n),
+    <span class="string">'revenu_mensuel_fcfa'</span>  : np.random.<span class="function">lognormal</span>(<span class="number">11.5</span>, <span class="number">0.8</span>, n),
+    <span class="string">'montant_pret_fcfa'</span>   : np.random.<span class="function">lognormal</span>(<span class="number">12.5</span>, <span class="number">0.7</span>, n),
+    <span class="string">'score_historique'</span>    : np.random.<span class="function">uniform</span>(<span class="number">0</span>, <span class="number">100</span>, n),
+    <span class="string">'nb_personnes_charge'</span> : np.random.<span class="function">randint</span>(<span class="number">0</span>, <span class="number">8</span>, n),
+    <span class="string">'epargne_fcfa'</span>        : np.random.<span class="function">lognormal</span>(<span class="number">10</span>, <span class="number">1</span>, n),
+    <span class="string">'zone_rurale'</span>         : np.random.<span class="function">choice</span>([<span class="number">0</span>,<span class="number">1</span>], n, p=[<span class="number">0.4</span>,<span class="number">0.6</span>]),
+    <span class="string">'nb_prets_anterieurs'</span> : np.random.<span class="function">randint</span>(<span class="number">0</span>, <span class="number">5</span>, n),
+})
+
+<span class="comment"># Variable cible</span>
+ratio = df_credit[<span class="string">'montant_pret_fcfa'</span>] / df_credit[<span class="string">'revenu_mensuel_fcfa'</span>]
+df_credit[<span class="string">'defaut'</span>] = (ratio/<span class="number">10</span> + (<span class="number">100</span>-df_credit[<span class="string">'score_historique'</span>])/<span class="number">200</span> + df_credit[<span class="string">'zone_rurale'</span>]*<span class="number">0.1</span> + np.random.<span class="function">uniform</span>(-<span class="number">0.1</span>,<span class="number">0.1</span>,n) > <span class="number">0.3</span>).astype(<span class="function">int</span>)
+
+X = df_credit.drop(<span class="string">'defaut'</span>, axis=<span class="number">1</span>); y = df_credit[<span class="string">'defaut'</span>]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.2</span>, stratify=y, random_state=<span class="number">42</span>)
+
+scale_w = (y_train==<span class="number">0</span>).<span class="function">sum</span>() / (y_train==<span class="number">1</span>).<span class="function">sum</span>()
+xgb_model = xgb.<span class="function">XGBClassifier</span>(n_estimators=<span class="number">100</span>, max_depth=<span class="number">6</span>, learning_rate=<span class="number">0.1</span>,
+                                 scale_pos_weight=scale_w, random_state=<span class="number">42</span>, eval_metric=<span class="string">'logloss'</span>)
+xgb_model.<span class="function">fit</span>(X_train, y_train)
+
+y_pred       = xgb_model.<span class="function">predict</span>(X_test)
+y_pred_proba = xgb_model.<span class="function">predict_proba</span>(X_test)[:, <span class="number">1</span>]
+
+<span class="function">print</span>(<span class="function">classification_report</span>(y_test, y_pred, target_names=[<span class="string">'Pas Défaut'</span>, <span class="string">'Défaut'</span>]))
+<span class="function">print</span>(<span class="string">f"F1  : {f1_score(y_test, y_pred):.4f}"</span>)
+<span class="function">print</span>(<span class="string">f"AUC : {roc_auc_score(y_test, y_pred_proba):.4f}"</span>)</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cours-card">
+                        <div class="cours-header" onclick="toggleCours(this)">
+                            <div class="cours-icon">📖</div>
+                            <span class="cours-title">Cours — LightGBM &amp; comparaison XGBoost vs LightGBM</span>
+                            <span class="cours-chevron">›</span>
+                        </div>
+                        <div class="cours-body">
+                            <div class="code-block">
+                                <div class="code-bar">
+                                    <div class="code-dots">
+                                        <div class="code-dot" style="background:#FF5F57"></div>
+                                        <div class="code-dot" style="background:#FEBC2E"></div>
+                                        <div class="code-dot" style="background:#28C840"></div>
+                                    </div>
+                                    <span class="code-lang">lightgbm_compare.py</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+                                </div>
+<pre><span class="keyword">import</span> lightgbm <span class="keyword">as</span> lgb
+
+lgb_train = lgb.<span class="function">Dataset</span>(X_train, label=y_train)
+lgb_test  = lgb.<span class="function">Dataset</span>(X_test,  label=y_test, reference=lgb_train)
+
+params = {
+    <span class="string">'objective'</span>       : <span class="string">'binary'</span>,
+    <span class="string">'metric'</span>          : <span class="string">'auc'</span>,
+    <span class="string">'boosting_type'</span>   : <span class="string">'gbdt'</span>,
+    <span class="string">'num_leaves'</span>      : <span class="number">31</span>,
+    <span class="string">'learning_rate'</span>   : <span class="number">0.05</span>,
+    <span class="string">'feature_fraction'</span>: <span class="number">0.8</span>,
+    <span class="string">'is_unbalance'</span>    : <span class="keyword">True</span>,
+    <span class="string">'verbose'</span>         : -<span class="number">1</span>,
+}
+
+lgb_model = lgb.<span class="function">train</span>(params, lgb_train, num_boost_round=<span class="number">100</span>,
+                      valid_sets=[lgb_train, lgb_test],
+                      callbacks=[lgb.<span class="function">early_stopping</span>(<span class="number">10</span>)])
+
+y_proba_lgb = lgb_model.<span class="function">predict</span>(X_test, num_iteration=lgb_model.best_iteration)
+y_pred_lgb  = (y_proba_lgb >= <span class="number">0.5</span>).astype(<span class="function">int</span>)
+
+<span class="function">print</span>(<span class="string">f"XGBoost  AUC : {roc_auc_score(y_test, y_pred_proba):.4f}"</span>)
+<span class="function">print</span>(<span class="string">f"LightGBM AUC : {roc_auc_score(y_test, y_proba_lgb):.4f}"</span>)</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>📖 Cours — SHAP &amp; Interprétabilité</h2>
+
+                    <div class="note">
+                        <strong>🎯 Pourquoi SHAP ?</strong> Comprendre pourquoi un client est à risque, identifier les facteurs de décision, assurer la transparence réglementaire.
+                    </div>
+
+                    <div class="cours-card">
+                        <div class="cours-header" onclick="toggleCours(this)">
+                            <div class="cours-icon">📖</div>
+                            <span class="cours-title">Cours — SHAP : summary plot, force plot, waterfall, pipelines Scikit-learn</span>
+                            <span class="cours-chevron">›</span>
+                        </div>
+                        <div class="cours-body">
+                            <div class="code-block">
+                                <div class="code-bar">
+                                    <div class="code-dots">
+                                        <div class="code-dot" style="background:#FF5F57"></div>
+                                        <div class="code-dot" style="background:#FEBC2E"></div>
+                                        <div class="code-dot" style="background:#28C840"></div>
+                                    </div>
+                                    <span class="code-lang">shap_pipeline.py</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+                                </div>
+<pre><span class="keyword">import</span> shap
+<span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline
+<span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler
+
+<span class="comment"># ── SHAP ──────────────────────────────────────────────</span>
+explainer   = shap.<span class="function">TreeExplainer</span>(xgb_model)
+shap_values = explainer.<span class="function">shap_values</span>(X_test)
+
+<span class="comment"># Summary plot — vue d'ensemble</span>
+shap.<span class="function">summary_plot</span>(shap_values, X_test, show=<span class="keyword">False</span>)
+plt.<span class="function">savefig</span>(<span class="string">'shap_summary.png'</span>, dpi=<span class="number">300</span>, bbox_inches=<span class="string">'tight'</span>)
+
+<span class="comment"># Importance globale (barplot)</span>
+shap.<span class="function">summary_plot</span>(shap_values, X_test, plot_type=<span class="string">'bar'</span>, show=<span class="keyword">False</span>)
+plt.<span class="function">savefig</span>(<span class="string">'shap_importance.png'</span>, dpi=<span class="number">300</span>)
+
+<span class="comment"># Force plot — un client à haut risque</span>
+idx = np.<span class="function">where</span>((y_pred==<span class="number">1</span>) & (y_test==<span class="number">1</span>))[<span class="number">0</span>][<span class="number">0</span>]
+shap.<span class="function">force_plot</span>(explainer.expected_value, shap_values[idx],
+               X_test.iloc[idx], matplotlib=<span class="keyword">True</span>, show=<span class="keyword">False</span>)
+plt.<span class="function">savefig</span>(<span class="string">f'shap_force_{idx}.png'</span>, dpi=<span class="number">300</span>)
+
+<span class="comment"># ── Pipeline Scikit-learn ─────────────────────────────</span>
+pipeline = <span class="function">Pipeline</span>([
+    (<span class="string">'scaler'</span>    , <span class="function">StandardScaler</span>()),
+    (<span class="string">'classifier'</span>, xgb.<span class="function">XGBClassifier</span>(n_estimators=<span class="number">100</span>, random_state=<span class="number">42</span>, eval_metric=<span class="string">'logloss'</span>))
+])
+pipeline.<span class="function">fit</span>(X_train, y_train)
+<span class="function">print</span>(<span class="string">f"Pipeline AUC : {roc_auc_score(y_test, pipeline.predict_proba(X_test)[:,1]):.4f}"</span>)</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exercise">
+                        <div class="exo-header" onclick="toggleExo(this)">
+                            <span class="exo-num">Exercice 3.1</span>
+                            <span class="exo-title">✏️ XGBoost + SHAP — Détection Paludisme (Tanzanie) 🏥</span>
+                            <span class="cours-chevron">›</span>
+                        </div>
+                        <div class="exo-body">
+                            <p><strong>Contexte :</strong> Classifier les zones à risque de paludisme en Tanzanie selon des facteurs environnementaux et démographiques.</p>
+                            <ol>
+                                <li>Créer un dataset avec : température, humidité, altitude, densité population, accès eau, couverture moustiquaires, <strong>zone à risque (0/1)</strong></li>
+                                <li>Entraîner un modèle XGBoost</li>
+                                <li>Évaluer avec ROC-AUC, F1, precision, recall</li>
+                                <li>Générer un SHAP summary plot</li>
+                                <li>Interpréter les 3 facteurs les plus influents</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROJET PRINCIPAL SEMAINE 3 -->
+                <div class="section">
+                    <h2>🚀 Projet Principal — Risque Crédit Mobile Money (Kenya, Côte d'Ivoire, Sénégal)</h2>
+                    <div class="project">
+                        <h4>📋 Description</h4>
+                        <p><strong>Client :</strong> Opérateur Mobile Money multi-pays. <strong>Problématique :</strong> réduire le taux de défaut de 15 % à 8 %.</p>
+                        <h4>🎯 Objectifs Business</h4>
+                        <ul>
+                            <li>Identifier les clients à risque avant l'octroi du crédit</li>
+                            <li>Optimiser les montants et durées par profil</li>
+                            <li>Maintenir un taux d'approbation &gt; 60 %</li>
+                        </ul>
+                        <div class="cours-card" style="margin-top:14px">
+                            <div class="cours-header" onclick="toggleCours(this)">
+                                <div class="cours-icon">📖</div>
+                                <span class="cours-title">Code Complet — Pipeline Mobile Money (10 000 clients, XGBoost, SHAP, impact business)</span>
+                                <span class="cours-chevron">›</span>
+                            </div>
+                            <div class="cours-body">
+                                <div class="code-block">
+                                    <div class="code-bar">
+                                        <div class="code-dots">
+                                            <div class="code-dot" style="background:#FF5F57"></div>
+                                            <div class="code-dot" style="background:#FEBC2E"></div>
+                                            <div class="code-dot" style="background:#28C840"></div>
+                                        </div>
+                                        <span class="code-lang">projet_mobile_money.py</span>
+                                        <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+                                    </div>
+<pre><span class="keyword">import</span> pandas <span class="keyword">as</span> pd, numpy <span class="keyword">as</span> np, xgboost <span class="keyword">as</span> xgb, lightgbm <span class="keyword">as</span> lgb
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> classification_report, roc_auc_score, f1_score
+<span class="keyword">import</span> shap, joblib
+
+np.random.seed(<span class="number">42</span>); n = <span class="number">10000</span>
+pays = np.random.<span class="function">choice</span>([<span class="string">'Kenya'</span>,<span class="string">'Cote_Ivoire'</span>,<span class="string">'Senegal'</span>], n, p=[<span class="number">0.4</span>,<span class="number">0.35</span>,<span class="number">0.25</span>])
+
+df = pd.<span class="function">DataFrame</span>({
+    <span class="string">'anciennete_jours'</span>      : np.random.<span class="function">randint</span>(<span class="number">30</span>, <span class="number">1095</span>, n),
+    <span class="string">'nb_transactions_3mois'</span>  : np.random.<span class="function">randint</span>(<span class="number">5</span>, <span class="number">200</span>, n),
+    <span class="string">'solde_moyen'</span>            : np.random.<span class="function">lognormal</span>(<span class="number">9</span>, <span class="number">1.5</span>, n),
+    <span class="string">'montant_demande'</span>        : np.random.<span class="function">lognormal</span>(<span class="number">10</span>, <span class="number">0.8</span>, n),
+    <span class="string">'nb_retards_paiement'</span>    : np.random.<span class="function">randint</span>(<span class="number">0</span>, <span class="number">5</span>, n),
+    <span class="string">'score_comportement'</span>     : np.random.<span class="function">uniform</span>(<span class="number">0</span>, <span class="number">100</span>, n),
+    <span class="string">'utilise_epargne'</span>        : np.random.<span class="function">choice</span>([<span class="number">0</span>,<span class="number">1</span>], n, p=[<span class="number">0.6</span>,<span class="number">0.4</span>]),
+    <span class="string">'zone_urbaine'</span>           : np.random.<span class="function">choice</span>([<span class="number">0</span>,<span class="number">1</span>], n, p=[<span class="number">0.45</span>,<span class="number">0.55</span>]),
+})
+
+<span class="comment"># Feature engineering</span>
+df[<span class="string">'ratio_pret_solde'</span>] = df[<span class="string">'montant_demande'</span>] / (df[<span class="string">'solde_moyen'</span>] + <span class="number">1</span>)
+df[<span class="string">'anciennete_annees'</span>] = df[<span class="string">'anciennete_jours'</span>] / <span class="number">365</span>
+df = pd.<span class="function">get_dummies</span>(df.<span class="function">assign</span>(pays=pays), columns=[<span class="string">'pays'</span>], drop_first=<span class="keyword">True</span>)
+
+prob = (<span class="number">0.3</span> + df[<span class="string">'ratio_pret_solde'</span>]*<span class="number">0.15</span> + df[<span class="string">'nb_retards_paiement'</span>]/<span class="number">20</span>
+        - df[<span class="string">'anciennete_annees'</span>]*<span class="number">0.1</span> - df[<span class="string">'utilise_epargne'</span>]*<span class="number">0.1</span>
+        + np.random.<span class="function">uniform</span>(-<span class="number">0.15</span>,<span class="number">0.15</span>,n))
+df[<span class="string">'defaut'</span>] = (prob > <span class="number">0.35</span>).astype(<span class="function">int</span>)
+<span class="function">print</span>(<span class="string">f"Taux de défaut : {df['defaut'].mean()*100:.1f}%"</span>)
+
+X = df.drop(<span class="string">'defaut'</span>, axis=<span class="number">1</span>); y = df[<span class="string">'defaut'</span>]
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=<span class="number">0.2</span>, stratify=y, random_state=<span class="number">42</span>)
+
+model = xgb.<span class="function">XGBClassifier</span>(n_estimators=<span class="number">200</span>, max_depth=<span class="number">6</span>, learning_rate=<span class="number">0.05</span>,
+                             scale_pos_weight=(y_tr==<span class="number">0</span>).<span class="function">sum</span>()/(y_tr==<span class="number">1</span>).<span class="function">sum</span>(),
+                             random_state=<span class="number">42</span>, eval_metric=<span class="string">'logloss'</span>)
+model.<span class="function">fit</span>(X_tr, y_tr)
+y_p = model.<span class="function">predict</span>(X_te)
+y_pp = model.<span class="function">predict_proba</span>(X_te)[:,<span class="number">1</span>]
+<span class="function">print</span>(<span class="string">f"AUC={roc_auc_score(y_te,y_pp):.4f}  F1={f1_score(y_te,y_p):.4f}"</span>)
+
+<span class="comment"># SHAP</span>
+exp = shap.<span class="function">TreeExplainer</span>(model); sv = exp.<span class="function">shap_values</span>(X_te)
+shap.<span class="function">summary_plot</span>(sv, X_te, show=<span class="keyword">False</span>); plt.<span class="function">savefig</span>(<span class="string">'shap_mm.png'</span>, dpi=<span class="number">300</span>)
+
+joblib.<span class="function">dump</span>(model, <span class="string">'xgb_mobile_money.pkl'</span>)
+<span class="function">print</span>(<span class="string">"✅ Modèle sauvegardé"</span>)</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════ SEMAINE 4 ═══ -->
+        <div id="semaine4" class="week">
+            <div class="week-header">📅 Semaine 4 — Déploiement &amp; Projet Final</div>
+            <div class="week-content">
+
+                <div class="section">
+                    <h2>🎯 Objectifs de la semaine</h2>
+                    <ul>
+                        <li>Créer une API Flask pour le modèle</li>
+                        <li>Déployer le modèle en production</li>
+                        <li>Mettre en place le monitoring</li>
+                        <li>Présenter le projet final</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>📖 Cours — API Flask pour ML</h2>
+
+                    <div class="cours-card">
+                        <div class="cours-header" onclick="toggleCours(this)">
+                            <div class="cours-icon">📖</div>
+                            <span class="cours-title">Cours — Structure du projet &amp; code Flask complet (predict + batch + health)</span>
+                            <span class="cours-chevron">›</span>
+                        </div>
+                        <div class="cours-body">
+                            <div class="code-block">
+                                <div class="code-bar">
+                                    <div class="code-dots">
+                                        <div class="code-dot" style="background:#FF5F57"></div>
+                                        <div class="code-dot" style="background:#FEBC2E"></div>
+                                        <div class="code-dot" style="background:#28C840"></div>
+                                    </div>
+                                    <span class="code-lang">structure.txt</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+                                </div>
+<pre>projet_api/
+├── app.py                  <span class="comment"># Application Flask principale</span>
+├── model/
+│   ├── xgboost_model.pkl  <span class="comment"># Modèle sauvegardé</span>
+│   └── metadata.pkl        <span class="comment"># Métadonnées</span>
+├── requirements.txt
+├── templates/
+│   └── index.html
+└── static/</pre>
+                            </div>
+                            <div class="code-block" style="margin-top:14px">
+                                <div class="code-bar">
+                                    <div class="code-dots">
+                                        <div class="code-dot" style="background:#FF5F57"></div>
+                                        <div class="code-dot" style="background:#FEBC2E"></div>
+                                        <div class="code-dot" style="background:#28C840"></div>
+                                    </div>
+                                    <span class="code-lang">app.py</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+                                </div>
+<pre><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request, jsonify, render_template
+<span class="keyword">from</span> flask_cors <span class="keyword">import</span> CORS
+<span class="keyword">import</span> joblib, pandas <span class="keyword">as</span> pd
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+
+app      = <span class="function">Flask</span>(__name__)
+<span class="function">CORS</span>(app)
+model    = joblib.<span class="function">load</span>(<span class="string">'model/xgboost_credit_mobile_money.pkl'</span>)
+metadata = joblib.<span class="function">load</span>(<span class="string">'model/model_metadata.pkl'</span>)
+
+@app.route(<span class="string">'/'</span>)
+<span class="keyword">def</span> <span class="function">home</span>():
+    <span class="keyword">return</span> render_template(<span class="string">'index.html'</span>)
+
+@app.route(<span class="string">'/api/predict'</span>, methods=[<span class="string">'POST'</span>])
+<span class="keyword">def</span> <span class="function">predict</span>():
+    <span class="keyword">try</span>:
+        data      = request.<span class="function">get_json</span>()
+        threshold = metadata[<span class="string">'optimal_threshold'</span>]
+        df_in     = pd.<span class="function">DataFrame</span>([data])[metadata[<span class="string">'features'</span>]]
+        proba     = model.<span class="function">predict_proba</span>(df_in)[:, <span class="number">1</span>][<span class="number">0</span>]
+        decision  = <span class="string">'REFUSÉ'</span> <span class="keyword">if</span> proba >= threshold <span class="keyword">else</span> <span class="string">'APPROUVÉ'</span>
+        niveau    = <span class="string">'ÉLEVÉ'</span> <span class="keyword">if</span> proba >= <span class="number">0.7</span> <span class="keyword">else</span> <span class="string">'MOYEN'</span> <span class="keyword">if</span> proba >= <span class="number">0.4</span> <span class="keyword">else</span> <span class="string">'FAIBLE'</span>
+        <span class="keyword">return</span> jsonify({
+            <span class="string">'decision'</span>          : decision,
+            <span class="string">'probabilite_defaut'</span>: <span class="function">float</span>(proba),
+            <span class="string">'niveau_risque'</span>     : niveau,
+            <span class="string">'timestamp'</span>         : datetime.<span class="function">now</span>().<span class="function">isoformat</span>(),
+        })
+    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+        <span class="keyword">return</span> jsonify({<span class="string">'error'</span>: <span class="function">str</span>(e)}), <span class="number">500</span>
+
+@app.route(<span class="string">'/health'</span>, methods=[<span class="string">'GET'</span>])
+<span class="keyword">def</span> <span class="function">health</span>():
+    <span class="keyword">return</span> jsonify({<span class="string">'status'</span>: <span class="string">'healthy'</span>, <span class="string">'model_loaded'</span>: model <span class="keyword">is not None</span>})
+
+<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
+    app.<span class="function">run</span>(debug=<span class="keyword">True</span>, host=<span class="string">'0.0.0.0'</span>, port=<span class="number">5000</span>)</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exercise">
+                        <div class="exo-header" onclick="toggleExo(this)">
+                            <span class="exo-num">Exercice 4.1</span>
+                            <span class="exo-title">✏️ Déploiement — API Flask pour votre modèle de détection de fraude</span>
+                            <span class="cours-chevron">›</span>
+                        </div>
+                        <div class="exo-body">
+                            <p><strong>Contexte :</strong> Vous devez mettre en production votre modèle Random Forest de détection de fraude M-Pesa.</p>
+                            <ol>
+                                <li>Sauvegarder le modèle avec <code>joblib.dump()</code></li>
+                                <li>Créer un endpoint <code>/api/predict</code> qui accepte un JSON et retourne la décision</li>
+                                <li>Ajouter un endpoint <code>/api/batch_predict</code> pour les prédictions en masse</li>
+                                <li>Implémenter un <code>/health</code> check</li>
+                                <li>Tester avec <code>curl</code> ou Postman</li>
+                            </ol>
+                            <div class="note" style="margin-top:10px">
+                                <strong>💡 Test rapide :</strong> <code>curl -X POST http://localhost:5000/api/predict -H "Content-Type: application/json" -d '{"montant_ksh": 5000, "heure": 14, ...}'</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROJET FINAL -->
+                <div class="section">
+                    <h2>🚀 Projet Final — Plateforme Complète de Prédiction</h2>
+                    <div class="project">
+                        <h4>🎯 Objectif</h4>
+                        <p>Créer une plateforme complète de prédiction de risque crédit avec API REST, interface web interactive, monitoring et documentation.</p>
+                        <ul style="margin-top:8px">
+                            <li>✅ API REST fonctionnelle</li>
+                            <li>✅ Interface web interactive</li>
+                            <li>✅ Monitoring des prédictions</li>
+                            <li>✅ Dashboard d'administration</li>
+                            <li>✅ Documentation API</li>
+                        </ul>
+                        <h4>📋 Livrables Finaux</h4>
+                        <ol><li>Code source complet (GitHub)</li><li>API déployée et testée</li><li>Documentation technique</li><li>Présentation PowerPoint</li><li>Vidéo de démonstration (5 min)</li></ol>
+                        <h4>🎓 Évaluation</h4>
+                        <table>
+                            <tr><th>Critère</th><th>Points</th></tr>
+                            <tr><td>Qualité du modèle ML (ROC-AUC &gt; 0.75)</td><td>25</td></tr>
+                            <tr><td>API fonctionnelle et documentée</td><td>20</td></tr>
+                            <tr><td>Interface utilisateur</td><td>15</td></tr>
+                            <tr><td>Analyse business et recommandations</td><td>15</td></tr>
+                            <tr><td>Code propre et documenté</td><td>10</td></tr>
+                            <tr><td>Présentation orale</td><td>15</td></tr>
+                            <tr><th>TOTAL</th><th>100</th></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>📚 Ressources Complémentaires</h2>
+                    <h3>🔗 Liens Utiles</h3>
+                    <ul>
+                        <li><a href="https://scikit-learn.org/" target="_blank">Documentation Scikit-learn</a></li>
+                        <li><a href="https://xgboost.readthedocs.io/" target="_blank">Documentation XGBoost</a></li>
+                        <li><a href="https://lightgbm.readthedocs.io/" target="_blank">Documentation LightGBM</a></li>
+                        <li><a href="https://shap.readthedocs.io/" target="_blank">Documentation SHAP</a></li>
+                        <li><a href="https://flask.palletsprojects.com/" target="_blank">Documentation Flask</a></li>
+                    </ul>
+                    <h3 style="margin-top:16px">📖 Datasets Africains</h3>
+                    <ul>
+                        <li><a href="https://data.worldbank.org/" target="_blank">World Bank Open Data</a></li>
+                        <li><a href="https://africanopendata.org/" target="_blank">Africa Open Data</a></li>
+                        <li><a href="https://zindi.africa/" target="_blank">Zindi.africa — Compétitions IA</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </div><!-- /content -->
+
+    <footer>
+        <p>© 2024 Club D.I.A.M — Machine Learning pour l'Afrique 🌍</p>
+        <p style="margin-top:8px;opacity:0.8">Build the Africa You Want 💎</p>
+    </footer>
+
+</div><!-- /container -->
+
+<script>
+    /* ── Accordéon Cours ──────────────────────── */
+    function toggleCours(header) {
+        var body    = header.nextElementSibling;
+        var chevron = header.querySelector('.cours-chevron');
+        var isOpen  = body.classList.contains('open');
+        body.classList.toggle('open', !isOpen);
+        chevron.classList.toggle('open', !isOpen);
+        header.classList.toggle('open', !isOpen);
+    }
+
+    /* ── Accordéon Exercice ───────────────────── */
+    function toggleExo(header) {
+        var card    = header.parentElement;
+        var body    = card.querySelector('.exo-body');
+        var chevron = header.querySelector('.cours-chevron');
+        if (!body) return;
+        var isOpen = body.classList.contains('open');
+        body.classList.toggle('open', !isOpen);
+        if (chevron) chevron.classList.toggle('open', !isOpen);
+    }
+
+    /* ── Copier le code ───────────────────────── */
+    function copyCode(btn) {
+        var pre = btn.closest('.code-block').querySelector('pre');
+        navigator.clipboard.writeText(pre.innerText).then(function () {
+            btn.textContent = 'Copié !';
+            btn.classList.add('copied');
+            setTimeout(function () {
+                btn.textContent = 'Copier';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+</script>
+
+</body>
+</html>
