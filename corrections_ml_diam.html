@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIAM · Corrections Machine Learning — 4 Semaines</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    line-height:1.6; color:#333;
+    background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+    padding:20px;
+}
+.container {
+    max-width:1200px; margin:0 auto; background:white;
+    border-radius:15px; box-shadow:0 10px 40px rgba(0,0,0,.2); overflow:hidden;
+}
+header {
+    background:linear-gradient(135deg,#155724 0%,#1e3c72 50%,#2a5298 100%);
+    color:white; padding:40px; text-align:center;
+}
+header h1 { font-size:2.4em; margin-bottom:10px; text-shadow:2px 2px 4px rgba(0,0,0,.3); }
+header p  { font-size:1.1em; opacity:.9; }
+.intro {
+    padding:30px 40px; background:#f8f9fa;
+    border-left:5px solid #28a745;
+}
+nav { background:#34495e; padding:15px 40px; position:sticky; top:0; z-index:100; }
+nav ul { list-style:none; display:flex; flex-wrap:wrap; gap:20px; }
+nav a  { color:white; text-decoration:none; padding:8px 15px; border-radius:5px; transition:background .3s; }
+nav a:hover { background:#2a5298; }
+.content { padding:40px; }
+.week { margin-bottom:50px; border:2px solid #e0e0e0; border-radius:10px; overflow:hidden; }
+.week-header {
+    background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+    color:white; padding:20px 30px; font-size:1.4em; font-weight:bold;
+}
+.week-content { padding:30px; }
+h2 { color:#2a5298; margin-bottom:15px; padding-bottom:10px; border-bottom:3px solid #667eea; }
+h3 { color:#764ba2; margin-top:25px; margin-bottom:15px; }
+h4 { color:#34495e; margin-top:20px; margin-bottom:10px; }
+.note    { background:#d4edda; border-left:5px solid #28a745; padding:15px; margin:15px 0; border-radius:5px; font-size:14px; }
+.warning { background:#f8d7da; border-left:5px solid #dc3545; padding:15px; margin:15px 0; border-radius:5px; }
+.stats-row {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:16px; margin:24px 0;
+}
+.stat-card {
+    background:#f8f9fa; border:2px solid #e0e0e0; border-radius:10px;
+    padding:18px; text-align:center;
+}
+.stat-card .val { font-size:2em; font-weight:bold; color:#2a5298; }
+.stat-card .lbl { font-size:13px; color:#666; margin-top:4px; }
+footer { background:#34495e; color:white; text-align:center; padding:20px; margin-top:50px; }
+
+/* ── Code blocks ─────────────────────────────────────── */
+.code-block {
+    background:#050D18; border:1.5px solid rgba(102,126,234,.25);
+    border-radius:12px; overflow:hidden; margin:16px 0;
+    font-family:'Courier New',monospace;
+}
+.code-bar {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:9px 16px; background:#0A1525;
+    border-bottom:1px solid rgba(102,126,234,.15);
+}
+.code-dots { display:flex; gap:6px; }
+.code-dot  { width:10px; height:10px; border-radius:50%; }
+.code-lang { font-family:'Courier New',monospace; font-size:11px; color:#5A7A94; letter-spacing:.06em; }
+.copy-btn  {
+    background:transparent; border:1px solid #2A4060; color:#5A7A94;
+    padding:3px 10px; border-radius:4px; font-size:11px;
+    font-family:'Courier New',monospace; cursor:pointer; transition:all .2s;
+}
+.copy-btn:hover, .copy-btn.copied { border-color:#667eea; color:#a5b4fc; }
+.code-block pre {
+    padding:18px 20px; overflow-x:auto; font-size:13px;
+    line-height:1.8; color:#C9D8E8; margin:0;
+}
+.comment  { color:#3D5A70; font-style:italic; }
+.keyword  { color:#7DD3FC; }
+.string   { color:#FCA5A5; }
+.function { color:#86EFAC; }
+.number   { color:#FDBA74; }
+
+/* ── Cours cards ─────────────────────────────────────── */
+.cours-card {
+    background:white; border:1.5px solid #E2E8F0; border-radius:12px;
+    overflow:hidden; margin-bottom:14px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06); transition:border-color .2s,box-shadow .2s;
+}
+.cours-card:hover { border-color:rgba(102,126,234,.4); box-shadow:0 4px 16px rgba(0,0,0,.10); }
+.cours-header {
+    display:flex; align-items:center; gap:12px;
+    padding:15px 20px; cursor:pointer; user-select:none;
+    border-bottom:1.5px solid transparent; background:white; transition:background .2s,border-color .2s;
+}
+.cours-header:hover { background:#F7F9FC; }
+.cours-header.open  { background:#F7F9FC; border-color:#E2E8F0; }
+.cours-icon {
+    width:34px; height:34px; border-radius:8px; background:#D4EDDA;
+    display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;
+}
+.cours-title { font-size:15px; font-weight:700; color:#1a1a2e; flex:1; }
+.cours-chevron { color:#CBD5E1; font-size:20px; font-weight:700; line-height:1; transition:transform .25s; }
+.cours-chevron.open { transform:rotate(90deg); }
+.cours-body { display:none; padding:20px 22px; }
+.cours-body.open { display:block; }
+code {
+    font-family:'Courier New',monospace; font-size:12.5px;
+    background:#f0f4f8; border:1px solid #d0d8e4;
+    padding:2px 6px; border-radius:4px; color:#2a5298; font-weight:600;
+}
+@media(max-width:768px) { .content { padding:20px; } nav { padding:10px 20px; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>✅ Club D.I.A.M</h1>
+  <p>Corrections Officielles — Machine Learning 4 Semaines</p>
+  <p style="margin-top:8px;opacity:.8">5 exercices · Solutions complètes &amp; expliquées · Focus Afrique 🌍</p>
+</header>
+
+<div class="intro">
+  <h2 style="border:none;padding:0;margin-bottom:10px">📋 Guide d'utilisation</h2>
+  <p>Chaque correction est <strong>expandable</strong> — cliquez sur la carte pour voir la solution complète.
+     Les solutions incluent la création du dataset, le code complet, les métriques et les visualisations.</p>
+  <p style="margin-top:8px">
+    <strong>Conseil :</strong> essayez de résoudre l'exercice par vous-même avant de consulter la correction.
+    Comparez votre approche avec la solution proposée — il peut exister plusieurs solutions correctes.
+  </p>
+  <div class="stats-row" style="margin-top:20px">
+    <div class="stat-card"><div class="val">5</div><div class="lbl">Exercices corrigés</div></div>
+    <div class="stat-card"><div class="val">4</div><div class="lbl">Semaines couvertes</div></div>
+    <div class="stat-card"><div class="val">6</div><div class="lbl">Algorithmes ML</div></div>
+    <div class="stat-card"><div class="val">100%</div><div class="lbl">Code exécutable</div></div>
+  </div>
+</div>
+
+<nav>
+  <ul>
+    <li><a href="#semaine1">📅 Semaine 1 — Régression</a></li>
+    <li><a href="#semaine2">📅 Semaine 2 — Classification</a></li>
+    <li><a href="#semaine3">📅 Semaine 3 — Boosting &amp; SHAP</a></li>
+    <li><a href="#semaine4">📅 Semaine 4 — Déploiement</a></li>
+  </ul>
+</nav>
+
+<div class="content">
+<div id="semaine1" class="week">
+  <div class="week-header">📅 Semaine 1 — Régression</div>
+  <div class="week-content">
+    <h2 style="color:#2a5298;margin-bottom:20px;padding-bottom:10px;border-bottom:3px solid #667eea">
+      Corrections · Semaine 1 <span style="font-size:0.6em;color:#6c757d;font-weight:400">— Linéaire · Logistique</span>
+    </h2>
+    <div class="cours-card">
+  <div class="cours-header" onclick="toggleCours(this)">
+    <div class="cours-icon">✅</div>
+    <div style="flex:1;min-width:0">
+      <span style="font-family:'Courier New',monospace;font-size:11px;background:#d4edda;color:#155724;padding:2px 10px;border-radius:50px;font-weight:700;margin-right:10px;border:1.5px solid rgba(40,167,69,0.35)">Corr. 1.1</span>
+      <span class="cours-title" style="display:inline">Régression Linéaire — Prix du Maïs au Kenya 🌽</span>
+    </div>
+    <span class="cours-chevron">›</span>
+  </div>
+  <div class="cours-body">
+    <p style="color:#374151;font-size:14px;line-height:1.7;margin-bottom:14px">Dataset 200 observations · EDA complète · LinearRegression · MSE/RMSE/MAE/R² · Visualisation prédictions vs réalité + résidus.</p>
+    <div class="note"><strong>💡 Point clé :</strong> Le R² mesure la part de variance expliquée par le modèle. Un résidu aléatoire sans structure confirme que le modèle est bien ajusté.</div>
+    <div class="code-block">
+  <div class="code-bar">
+    <div class="code-dots">
+      <div class="code-dot" style="background:#FF5F57"></div>
+      <div class="code-dot" style="background:#FEBC2E"></div>
+      <div class="code-dot" style="background:#28C840"></div>
+    </div>
+    <span class="code-lang">solution_ex1_1.py</span>
+    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+  </div>
+  <pre><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error, r2_score, mean_absolute_error
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+
+np.random.seed(<span class="number">123</span>)
+n = <span class="number">200</span>
+
+<span class="comment"># ── 1. Créer le dataset ──────────────────────────────────────</span>
+data = {
+    &<span class="comment">#x27;production_tonnes&#x27;    : np.random.randint(80000, 150000, n),</span>
+    &<span class="comment">#x27;pluviometrie_mm&#x27;      : np.random.randint(400, 1200, n),</span>
+    &<span class="comment">#x27;prix_carburant_ksh&#x27;   : np.random.uniform(100, 150, n),</span>
+    &<span class="comment">#x27;demande_export_tonnes&#x27;: np.random.randint(10000, 50000, n),</span>
+}
+df = pd.DataFrame(data)
+df[&<span class="comment">#x27;prix_mais_ksh_kg&#x27;] = (</span>
+    <span class="number">30</span> - <span class="number">0.0001</span> * df[&<span class="comment">#x27;production_tonnes&#x27;]</span>
+       + <span class="number">0.01</span>   * df[&<span class="comment">#x27;pluviometrie_mm&#x27;]</span>
+       + <span class="number">0.2</span>    * df[&<span class="comment">#x27;prix_carburant_ksh&#x27;]</span>
+       + <span class="number">0.0003</span> * df[&<span class="comment">#x27;demande_export_tonnes&#x27;]</span>
+       + np.random.normal(<span class="number">0</span>, <span class="number">3</span>, n)
+)
+
+<span class="comment"># ── 2. EDA complète ──────────────────────────────────────────</span>
+print(&quot;=== Statistiques descriptives ===&quot;)
+print(df.describe().round(<span class="number">2</span>))
+print(&quot;\nCorrélations avec la cible :&quot;)
+print(df.corr()[&<span class="comment">#x27;prix_mais_ksh_kg&#x27;].sort_values(ascending=False).round(4))</span>
+
+plt.figure(figsize=(<span class="number">8</span>, <span class="number">6</span>))
+sns.heatmap(df.corr(), annot=<span class="keyword">True</span>, cmap=&<span class="comment">#x27;coolwarm&#x27;, center=0, fmt=&#x27;.2f&#x27;)</span>
+plt.title(&<span class="comment">#x27;Matrice de Corrélation — Maïs Kenya&#x27;)</span>
+plt.tight_layout()
+plt.show()
+
+fig, axes = plt.subplots(<span class="number">2</span>, <span class="number">2</span>, figsize=(<span class="number">12</span>, <span class="number">8</span>))
+<span class="keyword">for</span> idx, col <span class="keyword">in</span> enumerate(data.keys()):
+    r, c = idx // <span class="number">2</span>, idx % <span class="number">2</span>
+    axes[r, c].scatter(df[col], df[&<span class="comment">#x27;prix_mais_ksh_kg&#x27;], alpha=0.5, color=&#x27;#2a5298&#x27;)</span>
+    axes[r, c].set_xlabel(col)
+    axes[r, c].set_ylabel(&<span class="comment">#x27;Prix (KSh/kg)&#x27;)</span>
+    axes[r, c].set_title(f&<span class="comment">#x27;Prix vs {col}&#x27;)</span>
+plt.tight_layout()
+plt.show()
+
+<span class="comment"># ── 3. Train / Test split ────────────────────────────────────</span>
+X = df.drop(&<span class="comment">#x27;prix_mais_ksh_kg&#x27;, axis=1)</span>
+y = df[&<span class="comment">#x27;prix_mais_ksh_kg&#x27;]</span>
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)
+
+<span class="comment"># ── 4. Entraînement + métriques ──────────────────────────────</span>
+model  = LinearRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+mae  = mean_absolute_error(y_test, y_pred)
+r2   = r2_score(y_test, y_pred)
+print(f&quot;\nRMSE : {rmse:.2f} KSh/kg&quot;)
+print(f&quot;MAE  : {mae:.2f} KSh/kg&quot;)
+print(f&quot;R²   : {r2:.4f}&quot;)
+print(&quot;\nCoefficients :&quot;)
+<span class="keyword">for</span> feat, coef <span class="keyword">in</span> zip(X.columns, model.coef_):
+    print(f&quot;  {feat:&lt;<span class="number">30</span>} : {coef:+.6f}&quot;)
+
+<span class="comment"># ── 5. Visualisations ────────────────────────────────────────</span>
+fig, axes = plt.subplots(<span class="number">1</span>, <span class="number">2</span>, figsize=(<span class="number">14</span>, <span class="number">5</span>))
+
+<span class="comment"># Prédictions vs Réalité</span>
+axes[<span class="number">0</span>].scatter(y_test, y_pred, alpha=<span class="number">0.7</span>, color=&<span class="comment">#x27;#2a5298&#x27;)</span>
+lims = [min(y_test.min(), y_pred.min()), max(y_test.max(), y_pred.max())]
+axes[<span class="number">0</span>].plot(lims, lims, &<span class="comment">#x27;r--&#x27;, lw=2, label=&#x27;Ligne idéale&#x27;)</span>
+axes[<span class="number">0</span>].set_xlabel(&<span class="comment">#x27;Valeurs Réelles (KSh/kg)&#x27;)</span>
+axes[<span class="number">0</span>].set_ylabel(&<span class="comment">#x27;Prédictions (KSh/kg)&#x27;)</span>
+axes[<span class="number">0</span>].set_title(&<span class="comment">#x27;Prédictions vs Réalité&#x27;)</span>
+axes[<span class="number">0</span>].legend()
+
+<span class="comment"># Analyse des résidus</span>
+residus = y_test - y_pred
+axes[<span class="number">1</span>].scatter(y_pred, residus, alpha=<span class="number">0.7</span>, color=&<span class="comment">#x27;#764ba2&#x27;)</span>
+axes[<span class="number">1</span>].axhline(y=<span class="number">0</span>, color=&<span class="comment">#x27;r&#x27;, linestyle=&#x27;--&#x27;, lw=2)</span>
+axes[<span class="number">1</span>].set_xlabel(&<span class="comment">#x27;Prédictions (KSh/kg)&#x27;)</span>
+axes[<span class="number">1</span>].set_ylabel(&<span class="comment">#x27;Résidus&#x27;)</span>
+axes[<span class="number">1</span>].set_title(&<span class="comment">#x27;Analyse des Résidus&#x27;)</span>
+
+plt.tight_layout()
+plt.savefig(&<span class="comment">#x27;resultats_mais_kenya.png&#x27;, dpi=300, bbox_inches=&#x27;tight&#x27;)</span>
+plt.show()</pre>
+</div>
+  </div>
+</div>
+<div class="cours-card">
+  <div class="cours-header" onclick="toggleCours(this)">
+    <div class="cours-icon">✅</div>
+    <div style="flex:1;min-width:0">
+      <span style="font-family:'Courier New',monospace;font-size:11px;background:#d4edda;color:#155724;padding:2px 10px;border-radius:50px;font-weight:700;margin-right:10px;border:1.5px solid rgba(40,167,69,0.35)">Corr. 1.2</span>
+      <span class="cours-title" style="display:inline">Régression Logistique — Abandon Scolaire au Nigeria 🎓</span>
+    </div>
+    <span class="cours-chevron">›</span>
+  </div>
+  <div class="cours-body">
+    <p style="color:#374151;font-size:14px;line-height:1.7;margin-bottom:14px">Dataset 500 élèves · StandardScaler · LogisticRegression · accuracy/precision/recall/F1 · Matrice de confusion · Courbe ROC.</p>
+    <div class="note"><strong>💡 Point clé :</strong> Toujours utiliser <code>stratify=y</code> lors du split pour conserver les proportions de classes dans train et test.</div>
+    <div class="code-block">
+  <div class="code-bar">
+    <div class="code-dots">
+      <div class="code-dot" style="background:#FF5F57"></div>
+      <div class="code-dot" style="background:#FEBC2E"></div>
+      <div class="code-dot" style="background:#28C840"></div>
+    </div>
+    <span class="code-lang">solution_ex1_2.py</span>
+    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+  </div>
+  <pre><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression
+<span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> (classification_report, confusion_matrix,
+                             roc_auc_score, roc_curve, accuracy_score)
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+
+np.random.seed(<span class="number">42</span>)
+n = <span class="number">500</span>
+
+<span class="comment"># ── 1. Dataset — 500 élèves nigérians ────────────────────────</span>
+df = pd.DataFrame({
+    &<span class="comment">#x27;distance_km&#x27;  : np.random.uniform(0, 30, n),</span>
+    &<span class="comment">#x27;revenu_naira&#x27; : np.random.randint(20000, 500000, n),</span>
+    &<span class="comment">#x27;nb_absences&#x27;  : np.random.randint(0, 50, n),</span>
+    &<span class="comment">#x27;note_moyenne&#x27; : np.random.uniform(20, 100, n),</span>
+    &<span class="comment">#x27;genre&#x27;        : np.random.choice([0, 1], n),  # 0=F, 1=M</span>
+})
+
+prob = (
+    <span class="number">0.15</span> * df[&<span class="comment">#x27;distance_km&#x27;]   / 30</span>
+    + <span class="number">0.30</span> * (<span class="number">1</span> - df[&<span class="comment">#x27;revenu_naira&#x27;]   / 500000)</span>
+    + <span class="number">0.30</span> * df[&<span class="comment">#x27;nb_absences&#x27;] / 50</span>
+    + <span class="number">0.20</span> * (<span class="number">1</span> - df[&<span class="comment">#x27;note_moyenne&#x27;]   / 100)</span>
+    + <span class="number">0.05</span> * df[&<span class="comment">#x27;genre&#x27;]</span>
+    + np.random.uniform(-<span class="number">0.1</span>, <span class="number">0.1</span>, n)
+)
+df[&<span class="comment">#x27;abandon&#x27;] = (prob &gt; 0.35).astype(int)</span>
+print(f&quot;Taux d&<span class="comment">#x27;abandon : {df[&#x27;abandon&#x27;].mean()*100:.1f}%&quot;)</span>
+
+<span class="comment"># ── 2. Entraînement LogisticRegression ───────────────────────</span>
+X = df.drop(&<span class="comment">#x27;abandon&#x27;, axis=1)</span>
+y = df[&<span class="comment">#x27;abandon&#x27;]</span>
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span class="number">0.2</span>, stratify=y, random_state=<span class="number">42</span>)
+
+scaler     = StandardScaler()
+X_train_sc = scaler.fit_transform(X_train)
+X_test_sc  = scaler.transform(X_test)
+
+model        = LogisticRegression(max_iter=<span class="number">1000</span>, random_state=<span class="number">42</span>)
+model.fit(X_train_sc, y_train)
+y_pred       = model.predict(X_test_sc)
+y_pred_proba = model.predict_proba(X_test_sc)[:, <span class="number">1</span>]
+
+<span class="comment"># ── 3. Métriques ─────────────────────────────────────────────</span>
+print(&quot;\n=== Rapport de Classification ===&quot;)
+print(classification_report(y_test, y_pred,
+      target_names=[&quot;Pas d&<span class="comment">#x27;abandon&quot;, &#x27;Abandon&#x27;]))</span>
+print(f&quot;Accuracy : {accuracy_score(y_test, y_pred):.4f}&quot;)
+print(f&quot;ROC-AUC  : {roc_auc_score(y_test, y_pred_proba):.4f}&quot;)
+
+<span class="comment"># ── 4. Matrice de confusion ───────────────────────────────────</span>
+cm = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(<span class="number">6</span>, <span class="number">5</span>))
+sns.heatmap(cm, annot=<span class="keyword">True</span>, fmt=&<span class="comment">#x27;d&#x27;, cmap=&#x27;Blues&#x27;,</span>
+            xticklabels=[&quot;Pas d&<span class="comment">#x27;abandon&quot;, &#x27;Abandon&#x27;],</span>
+            yticklabels=[&quot;Pas d&<span class="comment">#x27;abandon&quot;, &#x27;Abandon&#x27;])</span>
+plt.title(&<span class="comment">#x27;Matrice de Confusion — Abandon Scolaire Nigeria&#x27;)</span>
+plt.ylabel(&<span class="comment">#x27;Réel&#x27;)</span>
+plt.xlabel(&<span class="comment">#x27;Prédit&#x27;)</span>
+plt.tight_layout()
+plt.savefig(&<span class="comment">#x27;confusion_abandon_nigeria.png&#x27;, dpi=300)</span>
+plt.show()
+
+<span class="comment"># ── 5. Courbe ROC + ROC-AUC ──────────────────────────────────</span>
+fpr, tpr, _ = roc_curve(y_test, y_pred_proba)
+auc         = roc_auc_score(y_test, y_pred_proba)
+
+plt.figure(figsize=(<span class="number">7</span>, <span class="number">5</span>))
+plt.plot(fpr, tpr, color=&<span class="comment">#x27;#2a5298&#x27;, lw=2, label=f&#x27;ROC (AUC = {auc:.4f})&#x27;)</span>
+plt.plot([<span class="number">0</span>, <span class="number">1</span>], [<span class="number">0</span>, <span class="number">1</span>], &<span class="comment">#x27;k--&#x27;, label=&#x27;Aléatoire (AUC = 0.5)&#x27;)</span>
+plt.xlim([<span class="number">0.0</span>, <span class="number">1.0</span>]); plt.ylim([<span class="number">0.0</span>, <span class="number">1.02</span>])
+plt.xlabel(&<span class="comment">#x27;Taux Faux Positifs (FPR)&#x27;)</span>
+plt.ylabel(&<span class="comment">#x27;Taux Vrais Positifs (TPR)&#x27;)</span>
+plt.title(&<span class="comment">#x27;Courbe ROC — Abandon Scolaire Nigeria&#x27;)</span>
+plt.legend(loc=&<span class="comment">#x27;lower right&#x27;)</span>
+plt.tight_layout()
+plt.savefig(&<span class="comment">#x27;roc_abandon_nigeria.png&#x27;, dpi=300)</span>
+plt.show()</pre>
+</div>
+  </div>
+</div>
+  </div>
+</div>
+<div id="semaine2" class="week">
+  <div class="week-header">📅 Semaine 2 — Classification Supervisée &amp; Arbres</div>
+  <div class="week-content">
+    <h2 style="color:#2a5298;margin-bottom:20px;padding-bottom:10px;border-bottom:3px solid #667eea">
+      Corrections · Semaine 2 <span style="font-size:0.6em;color:#6c757d;font-weight:400">— Random Forest · SMOTE · Grid Search</span>
+    </h2>
+    <div class="cours-card">
+  <div class="cours-header" onclick="toggleCours(this)">
+    <div class="cours-icon">✅</div>
+    <div style="flex:1;min-width:0">
+      <span style="font-family:'Courier New',monospace;font-size:11px;background:#d4edda;color:#155724;padding:2px 10px;border-radius:50px;font-weight:700;margin-right:10px;border:1.5px solid rgba(40,167,69,0.35)">Corr. 2.1</span>
+      <span class="cours-title" style="display:inline">Classification Qualité d'Eau au Rwanda 💧</span>
+    </div>
+    <span class="cours-chevron">›</span>
+  </div>
+  <div class="cours-body">
+    <p style="color:#374151;font-size:14px;line-height:1.7;margin-bottom:14px">Dataset 800 sources · One-hot encoding · Vérification déséquilibre → SMOTE automatique · GridSearchCV · Feature Importance.</p>
+    <div class="note"><strong>💡 Point clé :</strong> Grid Search + Cross-Validation = on choisit les hyperparamètres sur le jeu d'entraînement UNIQUEMENT, jamais sur le test set.</div>
+    <div class="code-block">
+  <div class="code-bar">
+    <div class="code-dots">
+      <div class="code-dot" style="background:#FF5F57"></div>
+      <div class="code-dot" style="background:#FEBC2E"></div>
+      <div class="code-dot" style="background:#28C840"></div>
+    </div>
+    <span class="code-lang">solution_ex2_1.py</span>
+    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+  </div>
+  <pre><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split, GridSearchCV
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> classification_report, roc_auc_score
+<span class="keyword">from</span> imblearn.over_sampling <span class="keyword">import</span> SMOTE
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+np.random.seed(<span class="number">42</span>)
+n = <span class="number">800</span>
+
+<span class="comment"># ── 1. Dataset ───────────────────────────────────────────────</span>
+df = pd.DataFrame({
+    &<span class="comment">#x27;pH&#x27;             : np.random.uniform(5.5, 9.5, n),</span>
+    &<span class="comment">#x27;turbidite_NTU&#x27;  : np.random.exponential(10, n).clip(max=50),</span>
+    &<span class="comment">#x27;chlore_mg_L&#x27;    : np.random.uniform(0, 2, n),</span>
+    &<span class="comment">#x27;coliformes&#x27;     : np.random.randint(0, 500, n),</span>
+    &<span class="comment">#x27;conductivite&#x27;   : np.random.uniform(50, 2000, n),</span>
+    &<span class="comment">#x27;temperature&#x27;    : np.random.uniform(15, 35, n),</span>
+    &<span class="comment">#x27;source&#x27;         : np.random.choice([&#x27;puits&#x27;, &#x27;riviere&#x27;, &#x27;robinet&#x27;, &#x27;source&#x27;], n),</span>
+})
+
+score = (
+    ((df[&<span class="comment">#x27;pH&#x27;] &gt;= 6.5) &amp; (df[&#x27;pH&#x27;] &lt;= 8.5)).astype(float) * 0.30</span>
+    + (df[&<span class="comment">#x27;turbidite_NTU&#x27;] &lt; 5).astype(float)              * 0.25</span>
+    + (df[&<span class="comment">#x27;chlore_mg_L&#x27;]   &lt; 1).astype(float)              * 0.20</span>
+    + (df[&<span class="comment">#x27;coliformes&#x27;]    &lt; 50).astype(float)              * 0.15</span>
+    + (df[&<span class="comment">#x27;conductivite&#x27;]  &lt; 1000).astype(float)            * 0.10</span>
+    + np.random.uniform(-<span class="number">0.1</span>, <span class="number">0.1</span>, n)
+)
+df[&<span class="comment">#x27;potable&#x27;] = (score &gt; 0.50).astype(int)</span>
+print(f&quot;Eau potable : {df[&<span class="comment">#x27;potable&#x27;].mean()*100:.1f}%&quot;)</span>
+
+<span class="comment"># ── 2. Encodage + split ──────────────────────────────────────</span>
+df_enc = pd.get_dummies(df, columns=[&<span class="comment">#x27;source&#x27;], drop_first=True)</span>
+X = df_enc.drop(&<span class="comment">#x27;potable&#x27;, axis=1)</span>
+y = df_enc[&<span class="comment">#x27;potable&#x27;]</span>
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span class="number">0.2</span>, stratify=y, random_state=<span class="number">42</span>)
+
+<span class="comment"># ── 3. SMOTE si déséquilibre &gt; 60/40 ─────────────────────────</span>
+dist = y_train.value_counts(normalize=<span class="keyword">True</span>)
+print(f&quot;Distribution classes : {dist.to_dict()}&quot;)
+<span class="keyword">if</span> dist.min() &lt; <span class="number">0.40</span>:
+    sm = SMOTE(random_state=<span class="number">42</span>, k_neighbors=<span class="number">5</span>)
+    X_train, y_train = sm.fit_resample(X_train, y_train)
+    print(f&quot;Après SMOTE : {dict(zip(*np.unique(y_train, return_counts=<span class="keyword">True</span>)))}&quot;)
+
+<span class="comment"># ── 4. Grid Search ───────────────────────────────────────────</span>
+param_grid = {
+    &<span class="comment">#x27;n_estimators&#x27;     : [50, 100, 200],</span>
+    &<span class="comment">#x27;max_depth&#x27;        : [5, 10, None],</span>
+    &<span class="comment">#x27;min_samples_split&#x27;: [2, 5],</span>
+}
+gs = GridSearchCV(
+    RandomForestClassifier(random_state=<span class="number">42</span>, n_jobs=-<span class="number">1</span>),
+    param_grid, cv=<span class="number">5</span>, scoring=&<span class="comment">#x27;roc_auc&#x27;, n_jobs=-1, verbose=0</span>
+)
+gs.fit(X_train, y_train)
+print(f&quot;\nMeilleurs paramètres : {gs.best_params_}&quot;)
+print(f&quot;Meilleur ROC-AUC (CV) : {gs.best_score_:.4f}&quot;)
+
+best_rf      = gs.best_estimator_
+y_pred       = best_rf.predict(X_test)
+y_pred_proba = best_rf.predict_proba(X_test)[:, <span class="number">1</span>]
+
+print(&quot;\n=== Rapport de Classification ===&quot;)
+print(classification_report(y_test, y_pred, target_names=[&<span class="comment">#x27;Non Potable&#x27;, &#x27;Potable&#x27;]))</span>
+print(f&quot;ROC-AUC test : {roc_auc_score(y_test, y_pred_proba):.4f}&quot;)
+
+<span class="comment"># ── 5. Importance des features ───────────────────────────────</span>
+importances = pd.Series(best_rf.feature_importances_, index=X.columns)
+importances.sort_values(ascending=<span class="keyword">True</span>).plot(
+    kind=&<span class="comment">#x27;barh&#x27;, figsize=(9, 6), color=&#x27;#2a5298&#x27;)</span>
+plt.title(&quot;Importance des Features — Qualité d&<span class="comment">#x27;Eau Rwanda&quot;)</span>
+plt.xlabel(&<span class="comment">#x27;Importance (Gini)&#x27;)</span>
+plt.tight_layout()
+plt.savefig(&<span class="comment">#x27;feature_importance_eau_rwanda.png&#x27;, dpi=300)</span>
+plt.show()
+
+print(&quot;\n=== Top <span class="number">5</span> Features ===&quot;)
+<span class="keyword">for</span> feat, imp <span class="keyword">in</span> importances.sort_values(ascending=<span class="keyword">False</span>).head(<span class="number">5</span>).items():
+    print(f&quot;  {feat:&lt;<span class="number">25</span>} : {imp:.4f}&quot;)</pre>
+</div>
+  </div>
+</div>
+  </div>
+</div>
+<div id="semaine3" class="week">
+  <div class="week-header">📅 Semaine 3 — Boosting &amp; Interprétabilité</div>
+  <div class="week-content">
+    <h2 style="color:#2a5298;margin-bottom:20px;padding-bottom:10px;border-bottom:3px solid #667eea">
+      Corrections · Semaine 3 <span style="font-size:0.6em;color:#6c757d;font-weight:400">— XGBoost · SHAP · Métriques avancées</span>
+    </h2>
+    <div class="cours-card">
+  <div class="cours-header" onclick="toggleCours(this)">
+    <div class="cours-icon">✅</div>
+    <div style="flex:1;min-width:0">
+      <span style="font-family:'Courier New',monospace;font-size:11px;background:#d4edda;color:#155724;padding:2px 10px;border-radius:50px;font-weight:700;margin-right:10px;border:1.5px solid rgba(40,167,69,0.35)">Corr. 3.1</span>
+      <span class="cours-title" style="display:inline">XGBoost + SHAP — Détection Paludisme (Tanzanie) 🏥</span>
+    </div>
+    <span class="cours-chevron">›</span>
+  </div>
+  <div class="cours-body">
+    <p style="color:#374151;font-size:14px;line-height:1.7;margin-bottom:14px">Dataset 2 000 zones · XGBClassifier avec scale_pos_weight · ROC-AUC / F1 / Precision / Recall · SHAP summary_plot · Top 3 facteurs.</p>
+    <div class="note"><strong>💡 Point clé :</strong> <code>scale_pos_weight = nb_négatifs / nb_positifs</code> corrige le déséquilibre de classes dans XGBoost sans nécessiter de rééchantillonnage.</div>
+    <div class="code-block">
+  <div class="code-bar">
+    <div class="code-dots">
+      <div class="code-dot" style="background:#FF5F57"></div>
+      <div class="code-dot" style="background:#FEBC2E"></div>
+      <div class="code-dot" style="background:#28C840"></div>
+    </div>
+    <span class="code-lang">solution_ex3_1.py</span>
+    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+  </div>
+  <pre><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> xgboost <span class="keyword">as</span> xgb
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> (classification_report, roc_auc_score,
+                             f1_score, precision_score, recall_score)
+<span class="keyword">import</span> shap
+<span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+np.random.seed(<span class="number">42</span>)
+n = <span class="number">2000</span>
+
+<span class="comment"># ── 1. Dataset — Tanzanie ────────────────────────────────────</span>
+df = pd.DataFrame({
+    &<span class="comment">#x27;temperature&#x27;            : np.random.uniform(18, 35, n),</span>
+    &<span class="comment">#x27;humidite_pct&#x27;           : np.random.uniform(30, 95, n),</span>
+    &<span class="comment">#x27;altitude_m&#x27;             : np.random.uniform(0, 3000, n),</span>
+    &<span class="comment">#x27;densite_pop&#x27;            : np.random.exponential(100, n).clip(max=1000),</span>
+    &<span class="comment">#x27;acces_eau_pct&#x27;          : np.random.uniform(10, 95, n),</span>
+    &<span class="comment">#x27;couverture_moustiq_pct&#x27; : np.random.uniform(5, 85, n),</span>
+})
+
+score = (
+    (df[&<span class="comment">#x27;temperature&#x27;] - 18) / 17 * 0.25</span>
+    + df[&<span class="comment">#x27;humidite_pct&#x27;] / 95     * 0.25</span>
+    + (<span class="number">1</span> - df[&<span class="comment">#x27;altitude_m&#x27;] / 3000) * 0.15</span>
+    + (df[&<span class="comment">#x27;densite_pop&#x27;] / 500).clip(upper=1) * 0.15</span>
+    + (<span class="number">1</span> - df[&<span class="comment">#x27;acces_eau_pct&#x27;] / 95) * 0.10</span>
+    + (<span class="number">1</span> - df[&<span class="comment">#x27;couverture_moustiq_pct&#x27;] / 85) * 0.10</span>
+    + np.random.uniform(-<span class="number">0.10</span>, <span class="number">0.10</span>, n)
+)
+df[&<span class="comment">#x27;zone_risque&#x27;] = (score &gt; 0.45).astype(int)</span>
+print(f&quot;Zones à risque : {df[&<span class="comment">#x27;zone_risque&#x27;].mean()*100:.1f}%&quot;)</span>
+
+<span class="comment"># ── 2. XGBoost ───────────────────────────────────────────────</span>
+X = df.drop(&<span class="comment">#x27;zone_risque&#x27;, axis=1)</span>
+y = df[&<span class="comment">#x27;zone_risque&#x27;]</span>
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span class="number">0.2</span>, stratify=y, random_state=<span class="number">42</span>)
+
+scale_w = (y_train == <span class="number">0</span>).sum() / (y_train == <span class="number">1</span>).sum()
+model   = xgb.XGBClassifier(
+    n_estimators=<span class="number">100</span>, max_depth=<span class="number">6</span>, learning_rate=<span class="number">0.1</span>,
+    scale_pos_weight=scale_w, random_state=<span class="number">42</span>, eval_metric=&<span class="comment">#x27;logloss&#x27;</span>
+)
+model.fit(X_train, y_train)
+
+y_pred       = model.predict(X_test)
+y_pred_proba = model.predict_proba(X_test)[:, <span class="number">1</span>]
+
+<span class="comment"># ── 3. Métriques ─────────────────────────────────────────────</span>
+print(&quot;\n=== Rapport de Classification ===&quot;)
+print(classification_report(y_test, y_pred,
+      target_names=[&<span class="comment">#x27;Faible Risque&#x27;, &#x27;Haut Risque&#x27;]))</span>
+print(f&quot;ROC-AUC   : {roc_auc_score(y_test, y_pred_proba):.4f}&quot;)
+print(f&quot;F1-Score  : {f1_score(y_test, y_pred):.4f}&quot;)
+print(f&quot;Precision : {precision_score(y_test, y_pred):.4f}&quot;)
+print(f&quot;Recall    : {recall_score(y_test, y_pred):.4f}&quot;)
+
+<span class="comment"># ── 4. SHAP Summary Plot ─────────────────────────────────────</span>
+explainer   = shap.TreeExplainer(model)
+shap_values = explainer.shap_values(X_test)
+
+shap.summary_plot(shap_values, X_test, show=<span class="keyword">False</span>)
+plt.title(&<span class="comment">#x27;SHAP Summary Plot — Détection Paludisme Tanzanie&#x27;)</span>
+plt.tight_layout()
+plt.savefig(&<span class="comment">#x27;shap_paludisme_tanzanie.png&#x27;, dpi=300, bbox_inches=&#x27;tight&#x27;)</span>
+plt.show()
+
+<span class="comment"># ── 5. Top 3 facteurs influents ──────────────────────────────</span>
+mean_abs_shap = np.abs(shap_values).mean(axis=<span class="number">0</span>)
+top3 = pd.Series(mean_abs_shap, index=X.columns).sort_values(ascending=<span class="keyword">False</span>).head(<span class="number">3</span>)
+print(&quot;\n=== Top <span class="number">3</span> Facteurs les Plus Influents (SHAP) ===&quot;)
+<span class="keyword">for</span> rang, (feat, val) <span class="keyword">in</span> enumerate(top3.items(), <span class="number">1</span>):
+    print(f&quot;  {rang}. {feat:&lt;<span class="number">35</span>} : SHAP moyen = {val:.4f}&quot;)
+print(&quot;\n=&gt; Interprétation : une valeur SHAP élevée signifie que&quot;)
+print(&quot;   la variable pousse fortement la prédiction vers &<span class="comment">#x27;zone à risque&#x27;.&quot;)</span></pre>
+</div>
+  </div>
+</div>
+  </div>
+</div>
+<div id="semaine4" class="week">
+  <div class="week-header">📅 Semaine 4 — Déploiement &amp; Projet Final</div>
+  <div class="week-content">
+    <h2 style="color:#2a5298;margin-bottom:20px;padding-bottom:10px;border-bottom:3px solid #667eea">
+      Corrections · Semaine 4 <span style="font-size:0.6em;color:#6c757d;font-weight:400">— Flask · joblib · API REST</span>
+    </h2>
+    <div class="cours-card">
+  <div class="cours-header" onclick="toggleCours(this)">
+    <div class="cours-icon">✅</div>
+    <div style="flex:1;min-width:0">
+      <span style="font-family:'Courier New',monospace;font-size:11px;background:#d4edda;color:#155724;padding:2px 10px;border-radius:50px;font-weight:700;margin-right:10px;border:1.5px solid rgba(40,167,69,0.35)">Corr. 4.1</span>
+      <span class="cours-title" style="display:inline">Déploiement — API Flask pour la Détection de Fraude M-Pesa 🔐</span>
+    </div>
+    <span class="cours-chevron">›</span>
+  </div>
+  <div class="cours-body">
+    <p style="color:#374151;font-size:14px;line-height:1.7;margin-bottom:14px">Deux fichiers : (1) entraîner &amp; sauvegarder le modèle RF avec joblib, (2) API Flask complète avec <code>/health</code> · <code>/api/predict</code> · <code>/api/batch_predict</code> + tests cURL.</p>
+    <div class="note"><strong>💡 Point clé :</strong> Séparer la logique métier (modèle) de l'API (Flask) facilite les mises à jour : on peut recharger le modèle sans modifier le code de l'API.</div>
+    <p style="font-size:13px;color:#6c757d;font-family:Courier New,monospace;margin-bottom:8px">📄 Fichier 1 — Entraînement &amp; sauvegarde du modèle</p><div class="code-block">
+  <div class="code-bar">
+    <div class="code-dots">
+      <div class="code-dot" style="background:#FF5F57"></div>
+      <div class="code-dot" style="background:#FEBC2E"></div>
+      <div class="code-dot" style="background:#28C840"></div>
+    </div>
+    <span class="code-lang">sauvegarde_modele.py</span>
+    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+  </div>
+  <pre><span class="comment"># Fichier : sauvegarde_modele.py</span>
+<span class="comment"># Entraîner et sauvegarder le modèle Random Forest (Étape 1)</span>
+
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd, numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+<span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+<span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_auc_score, classification_report
+<span class="keyword">import</span> joblib, os
+
+np.random.seed(<span class="number">42</span>)
+n_normal, n_fraud = <span class="number">4750</span>, <span class="number">250</span>
+
+normal = pd.DataFrame({
+    &<span class="comment">#x27;montant_ksh&#x27;         : np.random.lognormal(7, 1.5, n_normal),</span>
+    &<span class="comment">#x27;heure&#x27;               : np.random.randint(6, 22, n_normal),</span>
+    &<span class="comment">#x27;nb_transactions_jour&#x27;: np.random.randint(1, 5, n_normal),</span>
+    &<span class="comment">#x27;anciennete_jours&#x27;    : np.random.randint(30, 1000, n_normal),</span>
+    &<span class="comment">#x27;localisation_change&#x27; : np.random.choice([0, 1], n_normal, p=[0.9, 0.1]),</span>
+    &<span class="comment">#x27;fraude&#x27;              : np.zeros(n_normal, dtype=int),</span>
+})
+fraud = pd.DataFrame({
+    &<span class="comment">#x27;montant_ksh&#x27;         : np.random.lognormal(9, 1, n_fraud),</span>
+    &<span class="comment">#x27;heure&#x27;               : np.random.choice(list(range(0, 6)) + list(range(22, 24)), n_fraud),</span>
+    &<span class="comment">#x27;nb_transactions_jour&#x27;: np.random.randint(5, 20, n_fraud),</span>
+    &<span class="comment">#x27;anciennete_jours&#x27;    : np.random.randint(1, 30, n_fraud),</span>
+    &<span class="comment">#x27;localisation_change&#x27; : np.random.choice([0, 1], n_fraud, p=[0.3, 0.7]),</span>
+    &<span class="comment">#x27;fraude&#x27;              : np.ones(n_fraud, dtype=int),</span>
+})
+
+df = pd.concat([normal, fraud]).sample(frac=<span class="number">1</span>, random_state=<span class="number">42</span>).reset_index(drop=<span class="keyword">True</span>)
+X  = df.drop(&<span class="comment">#x27;fraude&#x27;, axis=1)</span>
+y  = df[&<span class="comment">#x27;fraude&#x27;]</span>
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span class="number">0.2</span>, stratify=y, random_state=<span class="number">42</span>)
+
+model = RandomForestClassifier(
+    n_estimators=<span class="number">100</span>, class_weight=&<span class="comment">#x27;balanced&#x27;, random_state=42, n_jobs=-1)</span>
+model.fit(X_train, y_train)
+
+y_pred  = model.predict(X_test)
+y_proba = model.predict_proba(X_test)[:, <span class="number">1</span>]
+print(classification_report(y_test, y_pred, target_names=[&<span class="comment">#x27;Normal&#x27;, &#x27;Fraude&#x27;]))</span>
+print(f&quot;ROC-AUC : {roc_auc_score(y_test, y_proba):.4f}&quot;)
+
+<span class="comment"># Sauvegarde</span>
+os.makedirs(&<span class="comment">#x27;model&#x27;, exist_ok=True)</span>
+metadata = {
+    &<span class="comment">#x27;features&#x27;          : list(X.columns),</span>
+    &<span class="comment">#x27;optimal_threshold&#x27; : 0.5,</span>
+    &<span class="comment">#x27;roc_auc&#x27;           : roc_auc_score(y_test, y_proba),</span>
+    &<span class="comment">#x27;model_name&#x27;        : &#x27;Random Forest — Fraude M-Pesa&#x27;,</span>
+}
+joblib.dump(model,    &<span class="comment">#x27;model/random_forest_fraude_mpesa.pkl&#x27;)</span>
+joblib.dump(metadata, &<span class="comment">#x27;model/model_metadata.pkl&#x27;)</span>
+print(&quot;✅ Modèle sauvegardé dans model/&quot;)</pre>
+</div>
+<p style="font-size:13px;color:#6c757d;font-family:Courier New,monospace;margin:16px 0 8px">📄 Fichier 2 — Application Flask (API REST)</p><div class="code-block">
+  <div class="code-bar">
+    <div class="code-dots">
+      <div class="code-dot" style="background:#FF5F57"></div>
+      <div class="code-dot" style="background:#FEBC2E"></div>
+      <div class="code-dot" style="background:#28C840"></div>
+    </div>
+    <span class="code-lang">app.py</span>
+    <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+  </div>
+  <pre><span class="comment"># Fichier : app.py</span>
+<span class="comment"># API Flask avec /health + /api/predict + /api/batch_predict (Étapes 2/3/4)</span>
+
+<span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request, jsonify
+<span class="keyword">from</span> flask_cors <span class="keyword">import</span> CORS
+<span class="keyword">import</span> joblib, pandas <span class="keyword">as</span> pd, numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+
+app      = Flask(__name__)
+CORS(app)
+model    = joblib.load(&<span class="comment">#x27;model/random_forest_fraude_mpesa.pkl&#x27;)</span>
+metadata = joblib.load(&<span class="comment">#x27;model/model_metadata.pkl&#x27;)</span>
+
+FEATURES  = metadata[&<span class="comment">#x27;features&#x27;]</span>
+THRESHOLD = metadata[&<span class="comment">#x27;optimal_threshold&#x27;]</span>
+
+
+<span class="comment"># ── 4. Endpoint /health ─────────────────────────────────────</span>
+@app.route(&<span class="comment">#x27;/health&#x27;, methods=[&#x27;GET&#x27;])</span>
+<span class="keyword">def</span> health():
+    <span class="keyword">return</span> jsonify({
+        &<span class="comment">#x27;status&#x27;      : &#x27;healthy&#x27;,</span>
+        &<span class="comment">#x27;model_loaded&#x27;: model is not None,</span>
+        &<span class="comment">#x27;features&#x27;    : FEATURES,</span>
+        &<span class="comment">#x27;roc_auc&#x27;     : round(metadata[&#x27;roc_auc&#x27;], 4),</span>
+        &<span class="comment">#x27;timestamp&#x27;   : datetime.now().isoformat(),</span>
+    })
+
+
+<span class="comment"># ── 2. Endpoint /api/predict (unitaire) ─────────────────────</span>
+@app.route(&<span class="comment">#x27;/api/predict&#x27;, methods=[&#x27;POST&#x27;])</span>
+<span class="keyword">def</span> predict():
+    <span class="keyword">try</span>:
+        data  = request.get_json()
+        df_in = pd.DataFrame([data])[FEATURES]
+        proba = float(model.predict_proba(df_in)[:, <span class="number">1</span>][<span class="number">0</span>])
+        pred  = int(proba &gt;= THRESHOLD)
+        niveau = &<span class="comment">#x27;ÉLEVÉ&#x27; if proba &gt;= 0.70 else (&#x27;MOYEN&#x27; if proba &gt;= 0.40 else &#x27;FAIBLE&#x27;)</span>
+        <span class="keyword">return</span> jsonify({
+            &<span class="comment">#x27;decision&#x27;          : &#x27;BLOQUÉE&#x27;  if pred else &#x27;AUTORISÉE&#x27;,</span>
+            &<span class="comment">#x27;probabilite_fraude&#x27;: round(proba, 4),</span>
+            &<span class="comment">#x27;niveau_risque&#x27;     : niveau,</span>
+            &<span class="comment">#x27;seuil_utilise&#x27;     : THRESHOLD,</span>
+            &<span class="comment">#x27;timestamp&#x27;         : datetime.now().isoformat(),</span>
+        })
+    <span class="keyword">except</span> KeyError <span class="keyword">as</span> e:
+        <span class="keyword">return</span> jsonify({&<span class="comment">#x27;error&#x27;: f&#x27;Feature manquante : {e}&#x27;}), 400</span>
+    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+        <span class="keyword">return</span> jsonify({&<span class="comment">#x27;error&#x27;: str(e)}), 500</span>
+
+
+<span class="comment"># ── 3. Endpoint /api/batch_predict (en lot) ──────────────────</span>
+@app.route(&<span class="comment">#x27;/api/batch_predict&#x27;, methods=[&#x27;POST&#x27;])</span>
+<span class="keyword">def</span> batch_predict():
+    <span class="keyword">try</span>:
+        data         = request.get_json()
+        transactions = data.get(&<span class="comment">#x27;transactions&#x27;, [])</span>
+        <span class="keyword">if</span> <span class="keyword">not</span> transactions:
+            <span class="keyword">return</span> jsonify({&<span class="comment">#x27;error&#x27;: &#x27;Aucune transaction fournie&#x27;}), 400</span>
+
+        df_in  = pd.DataFrame(transactions)[FEATURES]
+        probas = model.predict_proba(df_in)[:, <span class="number">1</span>]
+
+        results = []
+        <span class="keyword">for</span> i, p <span class="keyword">in</span> enumerate(probas):
+            results.append({
+                &<span class="comment">#x27;index&#x27;              : i,</span>
+                &<span class="comment">#x27;decision&#x27;           : &#x27;BLOQUÉE&#x27; if p &gt;= THRESHOLD else &#x27;AUTORISÉE&#x27;,</span>
+                &<span class="comment">#x27;probabilite_fraude&#x27; : round(float(p), 4),</span>
+                &<span class="comment">#x27;niveau_risque&#x27;      : &#x27;ÉLEVÉ&#x27; if p &gt;= 0.70 else (&#x27;MOYEN&#x27; if p &gt;= 0.40 else &#x27;FAIBLE&#x27;),</span>
+            })
+
+        nb_fraudes = sum(<span class="number">1</span> <span class="keyword">for</span> r <span class="keyword">in</span> results <span class="keyword">if</span> r[&<span class="comment">#x27;decision&#x27;] == &#x27;BLOQUÉE&#x27;)</span>
+        <span class="keyword">return</span> jsonify({
+            &<span class="comment">#x27;total&#x27;             : len(results),</span>
+            &<span class="comment">#x27;fraudes_detectees&#x27; : nb_fraudes,</span>
+            &<span class="comment">#x27;taux_fraude_pct&#x27;   : round(nb_fraudes / len(results) * 100, 2),</span>
+            &<span class="comment">#x27;resultats&#x27;         : results,</span>
+        })
+    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
+        <span class="keyword">return</span> jsonify({&<span class="comment">#x27;error&#x27;: str(e)}), 500</span>
+
+
+<span class="keyword">if</span> __name__ == &<span class="comment">#x27;__main__&#x27;:</span>
+    app.run(debug=<span class="keyword">True</span>, host=&<span class="comment">#x27;0.0.0.0&#x27;, port=5000)</span>
+
+
+<span class="comment"># ── 5. Tests cURL ────────────────────────────────────────────</span>
+<span class="comment"># Test santé:</span>
+<span class="comment"># curl http://localhost:5000/health</span>
+<span class="comment">#</span>
+<span class="comment"># Prédiction unitaire:</span>
+<span class="comment"># curl -X POST http://localhost:5000/api/predict \</span>
+<span class="comment">#   -H &quot;Content-Type: application/json&quot; \</span>
+<span class="comment">#   -d &#x27;{&quot;montant_ksh&quot;:85000,&quot;heure&quot;:3,&quot;nb_transactions_jour&quot;:12,&quot;anciennete_jours&quot;:5,&quot;localisation_change&quot;:1}&#x27;</span>
+<span class="comment">#</span>
+<span class="comment"># Lot de transactions:</span>
+<span class="comment"># curl -X POST http://localhost:5000/api/batch_predict \</span>
+<span class="comment">#   -H &quot;Content-Type: application/json&quot; \</span>
+<span class="comment">#   -d &#x27;{&quot;transactions&quot;:[</span>
+<span class="comment">#     {&quot;montant_ksh&quot;:1200,&quot;heure&quot;:14,&quot;nb_transactions_jour&quot;:2,&quot;anciennete_jours&quot;:400,&quot;localisation_change&quot;:0},</span>
+<span class="comment">#     {&quot;montant_ksh&quot;:92000,&quot;heure&quot;:2,&quot;nb_transactions_jour&quot;:15,&quot;anciennete_jours&quot;:3,&quot;localisation_change&quot;:1}</span>
+<span class="comment">#   ]}&#x27;</span>
+<span class="comment">#</span>
+<span class="comment"># Résultat attendu transaction 1 : AUTORISÉE (risque FAIBLE)</span>
+<span class="comment"># Résultat attendu transaction 2 : BLOQUÉE   (risque ÉLEVÉ)</span></pre>
+</div>
+  </div>
+</div>
+  </div>
+</div>
+</div>
+
+<footer>
+  <p>© 2024 Club D.I.A.M — Corrections Machine Learning 🌍</p>
+  <p style="margin-top:8px;opacity:.8">Build the Africa You Want 💎</p>
+</footer>
+
+</div>
+
+<script>
+function toggleCours(header) {
+    var body    = header.nextElementSibling;
+    var chevron = header.querySelector('.cours-chevron');
+    var isOpen  = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    chevron.classList.toggle('open', !isOpen);
+    header.classList.toggle('open', !isOpen);
+}
+function copyCode(btn) {
+    var pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(function () {
+        btn.textContent = 'Copié !'; btn.classList.add('copied');
+        setTimeout(function () { btn.textContent = 'Copier'; btn.classList.remove('copied'); }, 2000);
+    });
+}
+</script>
+</body>
+</html>
